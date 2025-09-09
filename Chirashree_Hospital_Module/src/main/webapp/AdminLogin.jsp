@@ -38,8 +38,10 @@
         <!-- Email Input with Send OTP -->
         <div class="input-group mb-3">
             <span class="input-group-text">Email</span>
-            <input type="email" class="form-control" placeholder="Admin Email" aria-label="Admin Email" required>
+            <input type="email" class="form-control" id="email" placeholder="Admin Email" aria-label="Admin Email" onchange="CheckEmail()"  oninput="validateEmail()" required>
             <button class="btn btn-success" type="button">Send OTP</button>
+            <div id="emailError" class="form-text text-danger"></div>
+
         </div>
 
         <!-- OTP Input (shown after sending OTP) -->
@@ -64,5 +66,6 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
+<script src="validation.js"></script>
 </body>
 </html>

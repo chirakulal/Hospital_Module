@@ -34,22 +34,22 @@ public class HospitalConfiguration implements WebMvcConfigurer {
         registry.jsp("/WEB-INF/views/",".jsp");
     }
 
-//    @Bean
-//    public LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean(){
-//        LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
-//        factoryBean.setDataSource(dataSource());
-//        factoryBean.setPackagesToScan("com.xworkz.module.entity");
-//        factoryBean.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
-//        return factoryBean;
-//    }
-//
-//    @Bean
-//    public DataSource dataSource(){
-//        DriverManagerDataSource source = new DriverManagerDataSource();
-//        source.setDriverClassName("com.mysql.cj.jdbc.Driver");
-//        source.setUrl("jdbc:mysql://localhost:3306/module");
-//        source.setUsername("root");
-//        source.setPassword("Chir@#$123");
-//        return source;
-//    }
+    @Bean
+    public LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean(){
+        LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
+        factoryBean.setDataSource(dataSource());
+        factoryBean.setPackagesToScan("com.xworkz.module.entity");
+        factoryBean.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
+        return factoryBean;
+    }
+
+    @Bean
+    public DataSource dataSource(){
+        DriverManagerDataSource source = new DriverManagerDataSource();
+        source.setDriverClassName("com.mysql.cj.jdbc.Driver");
+        source.setUrl("jdbc:mysql://localhost:3306/module");
+        source.setUsername("root");
+        source.setPassword("Chir@#$123");
+        return source;
+    }
 }
