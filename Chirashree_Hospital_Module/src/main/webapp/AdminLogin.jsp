@@ -1,5 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<html lang="en">
+<html lang="en" xmlns:c="http://www.w3.org/1999/XSL/Transform">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -32,27 +32,36 @@
                 background-position: center;
                 height: 100vh;">
 
-    <div class="card p-4 shadow-lg bg-white bg-opacity-75" style="max-width: 400px; width: 100%;">
-        <h4 class="mb-3 text-success fw-bold">Admin Login</h4>
-
-        <!-- Email Input with Send OTP -->
-        <div class="input-group mb-3">
-            <span class="input-group-text">Email</span>
-            <input type="email" class="form-control" id="email" placeholder="Admin Email" aria-label="Admin Email" onchange="CheckEmail()"  oninput="validateEmail()" required>
-            <button class="btn btn-success" type="button">Send OTP</button>
-            <div id="emailError" class="form-text text-danger"></div>
-
+    <form action="sendOtp" method="post">
+        <div>
+        <div class="mb-3">
+            <div class="input-group mb-3">
+                <span class="input-group-text">Email</span>
+                <input type="email" class="form-control" name="email" placeholder="Admin Email" oninput="validateEmail()" onchange="checkEmail()" required>
+                <button class="btn btn-success" type="submit">Send OTP</button>
+            </div>
+               <div id="emailError" class="form-text text-danger">
+                <c:if test="${not empty message}">${message}</c:if>
+            </div>
         </div>
 
-        <!-- OTP Input (shown after sending OTP) -->
+
+
+        <!-- OTP Input -->
         <div class="input-group mb-3">
             <span class="input-group-text">OTP</span>
-            <input type="text" class="form-control" placeholder="Enter OTP" aria-label="OTP">
+            <input type="text" class="form-control" id="otp" placeholder="Enter OTP">
         </div>
 
-        <!-- Login Button -->
-        <button class="btn btn-success w-100 fw-semibold" type="button">Login</button>
+        <!-- Verify/Login Button -->
+        <button class="btn btn-success w-100 fw-semibold mb-2" type="button" onclick="verifyOtp()">Login</button>
+
+        <!-- Resend OTP Button with Timer -->
+        <button class="btn btn-outline-success w-100 fw-semibold" id="resendOtpBtn" type="button" onclick="sendOtp()" disabled>
+            Resend OTP (<span id="timer">120</span>s)
+        </button>
     </div>
+    </form>
 </section>
 
 <!-- Footer -->

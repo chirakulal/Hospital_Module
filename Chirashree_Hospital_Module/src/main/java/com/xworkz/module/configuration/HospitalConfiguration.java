@@ -31,7 +31,7 @@ public class HospitalConfiguration implements WebMvcConfigurer {
 
     @Override
     public void configureViewResolvers(ViewResolverRegistry registry) {
-        registry.jsp("/WEB-INF/views/",".jsp");
+        registry.jsp("/",".jsp");
     }
 
     @Bean
@@ -47,7 +47,7 @@ public class HospitalConfiguration implements WebMvcConfigurer {
     public DataSource dataSource(){
         DriverManagerDataSource source = new DriverManagerDataSource();
         source.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        source.setUrl("jdbc:mysql://localhost:3306/module");
+        source.setUrl("jdbc:mysql://localhost:3306/hospital");
         source.setUsername("root");
         source.setPassword("Chir@#$123");
         return source;

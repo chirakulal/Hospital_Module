@@ -9,6 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
+import java.time.LocalDateTime;
 
 @Repository
 public class HospitalRepoImpl implements HospitalRepo{
@@ -32,12 +33,12 @@ public class HospitalRepoImpl implements HospitalRepo{
             entityTransaction = entityManager.getTransaction();
 
             entityTransaction.begin();
-            Query query = entityManager.createQuery("countEmail");
+            Query query = entityManager.createNamedQuery("countEmail");
             query.setParameter("email", email);
             count = (long) query.getSingleResult();
             entityTransaction.commit();
         }catch (Exception e){
-            if(entityTransaction==null && entityTransaction.isActive()){
+            if(entityTransaction!=null && entityTransaction.isActive()){
                 entityTransaction.rollback();
             }
             e.printStackTrace();
@@ -46,5 +47,35 @@ public class HospitalRepoImpl implements HospitalRepo{
         }
 
         return count;
+    }
+
+    @Override
+  public void updateOTp(String email, LocalDateTime time, String otp){
+        EntityManager entityManager = null;
+        EntityTransaction entityTransaction = null;
+        try{
+            entityManager = entityManagerFactory.createEntityManager();
+            entityTransaction=entityManager.getTransaction();
+
+            entityTransaction.begin();
+
+
+           Query query = entityManager.createNamedQuery("getByEmail");
+            query.setParameter("email",email);
+            query.setParameter("otp",otp);
+            query.setParameter("time",time);
+            int rowsUpdated = query.executeUpdate();
+            log.info("Rows updated: {}", rowsUpdated);
+
+            entityTransaction.commit();
+        }catch (Exception e){
+            if(entityTransaction.isActive()&&entityTransaction!=null){
+                entityTransaction.rollback();
+            }
+        }finally {
+            entityManager.close();
+        }
+
+
     }
 }
