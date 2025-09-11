@@ -1,5 +1,6 @@
 package com.xworkz.module.repository;
 
+import com.xworkz.module.entity.HospitalEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,4 +84,38 @@ public class HospitalRepoImpl implements HospitalRepo{
 
      return update;
     }
+
+    @Override
+    public HospitalEntity getEmail(String email) {
+        EntityManager entityManager = null;
+        EntityTransaction entityTransaction = null;
+        HospitalEntity hospitalEntity;
+
+        try{
+            entityManager=entityManagerFactory.createEntityManager();
+            entityTransaction = entityManager.getTransaction();
+            entityTransaction.begin();
+            Query query = entityManager.createNamedQuery("getByEmail");
+            query.setParameter("email",email);
+            hospitalEntity =(HospitalEntity) query.getSingleResult();
+
+            entityTransaction.commit();
+
+            return hospitalEntity;
+
+        }catch (Exception e){
+            if(entityTransaction.isActive()){
+                entityTransaction.rollback();
+            }
+            e.printStackTrace();
+        }finally {
+            entityManager.close();
+        }
+
+
+        return null;
+        }
+
+
+
 }

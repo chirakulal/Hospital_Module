@@ -82,15 +82,13 @@ public class HospitalController {
 
         LocalDateTime sentTime = (LocalDateTime) session.getAttribute("otpSentTime");
         if (sentTime == null) {
-
             modelAndView.addObject("error", "Session expired. Please request OTP again.");
             modelAndView.setViewName("AdminLogin");
             return modelAndView;
         }
 
-        boolean check = hospitalService.checkOtp(otp, sentTime);
+        boolean check = hospitalService.checkOtp(otp, sentTime, email);
         if (!check) {
-
             long secondsPassed = java.time.Duration.between(sentTime, LocalDateTime.now()).getSeconds();
             int remaining = (int) Math.max(0, 120 - secondsPassed);
 
@@ -99,7 +97,6 @@ public class HospitalController {
             modelAndView.addObject("remainingSeconds", remaining);
             modelAndView.setViewName("verifyOtp");
         } else {
-
             session.removeAttribute("otpSentTime");
             session.removeAttribute("loginEmailForOtp");
 
@@ -109,6 +106,8 @@ public class HospitalController {
 
         return modelAndView;
     }
+
+
     // Step 3: Resend OTP
     @PostMapping("resendOtp")
     public ModelAndView resendOtp(ModelAndView modelAndView, HttpSession session) {

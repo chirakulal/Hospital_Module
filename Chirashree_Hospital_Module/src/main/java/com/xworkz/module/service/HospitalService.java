@@ -11,5 +11,5 @@ public interface HospitalService {
 
     boolean sendOtp(String email);
 
-     boolean checkOtp(String otp, LocalDateTime sentTime);
+     boolean checkOtp(String otp, LocalDateTime sentTime, String email);
 }

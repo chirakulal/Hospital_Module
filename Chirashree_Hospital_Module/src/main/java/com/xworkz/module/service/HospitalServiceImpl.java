@@ -1,5 +1,6 @@
 package com.xworkz.module.service;
 
+import com.xworkz.module.entity.HospitalEntity;
 import com.xworkz.module.repository.HospitalRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,7 @@ public class HospitalServiceImpl implements HospitalService {
 
     @Override
     public boolean sendOtp(String email) {
-        // ✅ Generate 6-digit OTP
+
         Random random = new Random();
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < 6; i++) {
@@ -43,7 +44,7 @@ public class HospitalServiceImpl implements HospitalService {
         generatedOtp = sb.toString();
         otpGeneratedTime = LocalDateTime.now();
 
-        // ✅ Encode OTP before saving
+
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         String encodedOtp = encoder.encode(generatedOtp);
 
@@ -60,22 +61,33 @@ public class HospitalServiceImpl implements HospitalService {
     }
 
     @Override
-    public boolean checkOtp(String otp, LocalDateTime sentTime) {
-        // ✅ Check expiry (2 minutes)
+    public boolean checkOtp(String otp, LocalDateTime sentTime, String email) {
+
         if (sentTime.plusMinutes(2).isBefore(LocalDateTime.now())) {
             log.warn("OTP expired.");
             return false;
         }
 
-        // ✅ Compare entered OTP with generated one
-        if (otp.equals(generatedOtp)) {
-            log.info("OTP matched successfully.");
+
+        HospitalEntity hospitalEntity = hospitalRepo.getEmail(email);
+        String storedEncodedOtp = hospitalEntity.getOtp();
+
+        if (storedEncodedOtp == null) {
+            log.error("No OTP found for email {}", email);
+            return false;
+        }
+
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+        if (encoder.matches(otp, storedEncodedOtp)) {
+            log.info("OTP matched successfully for email {}", email);
             return true;
         } else {
-            log.info("OTP did not match.");
+            log.info("OTP did not match for email {}", email);
             return false;
         }
     }
+
 
 
     private void sendEmailOtp(String email, String subject, String body) {
