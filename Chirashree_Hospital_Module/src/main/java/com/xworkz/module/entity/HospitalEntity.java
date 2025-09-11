@@ -12,8 +12,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name="hospital_details")
-@NamedQuery(name = "updateotp",query = "update HospitalEntity e set e.otp=:otp , e.time=:time where e.email =:email ")
-@NamedQuery(name = "countEmail",query = "select count(e.email) from HospitalEntity e where email=:email")
+@NamedQuery(name = "HospitalEntity.updateOtp",query = "update HospitalEntity e set e.otp=:otp , e.time=:time where e.email =:email")
+@NamedQuery(name = "countEmail",query = "select count(e.email) from HospitalEntity e where e.email=:email")
+
 public class HospitalEntity {
 
 
@@ -26,7 +27,7 @@ public class HospitalEntity {
     private String email;
 
     @Column(name = "otp_login")
-    private int otp;
+    private String otp;
 
     @Column(name = "time")
     private LocalDateTime time;

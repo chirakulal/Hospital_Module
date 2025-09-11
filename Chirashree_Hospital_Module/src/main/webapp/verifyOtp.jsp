@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Healing Hands Hospital</title>
+    <title>Verify OTP - Healing Hands Hospital</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB"
           crossorigin="anonymous">
@@ -23,7 +23,6 @@
     </nav>
 </header>
 
-<!-- Main Section -->
 <section class="bg-image d-flex justify-content-center align-items-center text-center"
          style="background-image: url('/Chirashree_Hospital_Module/resources/images/hospital.png');
                 background-size: cover;
@@ -31,17 +30,17 @@
                 height: 100vh;">
 
     <div class="card shadow-lg p-4" style="width: 100%; max-width: 400px;">
-        <h3 class="text-success text-center mb-4">Admin Login</h3>
+        <h3 class="text-success text-center mb-4">Verify OTP</h3>
 
-        <form action="sendOtp" method="post">
+        <form action="verifyOtp" method="post">
+            <input type="hidden" name="email" value="${param.email}"> <!-- Email passed from Send OTP -->
+
             <div class="mb-3">
+                <label for="otp" class="form-label">Enter OTP</label>
                 <div class="input-group">
-                    <input type="email" class="form-control" name="email" id="email"
-                           placeholder="Enter your email" oninput="validateEmail()" onchange="checkEmail()" value="${dto.email}" required>
-
+                    <span class="input-group-text"><i class="bi bi-key-fill"></i></span>
+                    <input type="text" class="form-control" id="otp" name="otp" placeholder="6-digit OTP" required>
                 </div>
-                <div id="emailError" class="form-text text-danger"></div>
-
             </div>
 
             <!-- Error Message -->
@@ -54,17 +53,21 @@
                 <div class="alert alert-success py-2 mb-2">${success}</div>
             </c:if>
 
-            <button type="submit" class="btn btn-success w-100 fw-semibold">Send OTP</button>
+            <button type="submit" class="btn btn-success w-100 fw-semibold mb-2">Login</button>
         </form>
 
-        <div class="text-center mt-3 text-muted">
-            <small>You will receive a 6-digit OTP via email.</small>
+        <!-- Resend OTP -->
+        <button id="resendOtpBtn" class="btn btn-outline-success w-100 fw-semibold" type="button" disabled>
+            Resend OTP (<span id="timer">120</span>s)
+        </button>
+
+        <div class="text-center mt-2 text-muted">
+            <small>You can resend the OTP after 2 minutes.</small>
         </div>
     </div>
 
 </section>
 
-<!-- Footer -->
 <footer class="bg-success text-white text-center py-3 mt-auto">
     <div class="container">
         <p class="mb-1">&copy; 2025 Healing Hands Hospital. All rights reserved.</p>
@@ -75,7 +78,37 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
         crossorigin="anonymous"></script>
-<script src="validation.js"></script>
+<input type="hidden" name="email" value="${email}">
+
+<script>
+    window.addEventListener("DOMContentLoaded", () => {
+        let timeLeft = ${remainingSeconds != null ? remainingSeconds : 120};
+        const timerElement = document.getElementById("timer");
+        const resendBtn = document.getElementById("resendOtpBtn");
+
+        const countdown = setInterval(() => {
+            timeLeft--;
+            timerElement.textContent = timeLeft;
+
+            if (timeLeft <= 0) {
+                clearInterval(countdown);
+                timerElement.textContent = "0";
+                resendBtn.disabled = false;
+                resendBtn.textContent = "Resend OTP";
+            }
+        }, 1000);
+
+        resendBtn.addEventListener("click", () => {
+            resendBtn.disabled = true;
+            resendBtn.textContent = "Resending...";
+            fetch("resendOtp", {
+                method: "POST",
+                headers: {"Content-Type": "application/x-www-form-urlencoded"},
+                body: "email=${email}"
+            }).then(() => location.reload());
+        });
+    });
+</script>
 
 </body>
 </html>

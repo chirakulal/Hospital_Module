@@ -50,9 +50,12 @@ public class HospitalRepoImpl implements HospitalRepo{
     }
 
     @Override
-  public void updateOTp(String email, LocalDateTime time, String otp){
+  public boolean updateOTp(String email, LocalDateTime time, String otp){
+        log.info("Saving OTP {} for {} at time {}", otp, email, time);
+
         EntityManager entityManager = null;
         EntityTransaction entityTransaction = null;
+        boolean update=false;
         try{
             entityManager = entityManagerFactory.createEntityManager();
             entityTransaction=entityManager.getTransaction();
@@ -60,7 +63,7 @@ public class HospitalRepoImpl implements HospitalRepo{
             entityTransaction.begin();
 
 
-           Query query = entityManager.createNamedQuery("getByEmail");
+           Query query = entityManager.createNamedQuery("HospitalEntity.updateOtp");
             query.setParameter("email",email);
             query.setParameter("otp",otp);
             query.setParameter("time",time);
@@ -68,14 +71,16 @@ public class HospitalRepoImpl implements HospitalRepo{
             log.info("Rows updated: {}", rowsUpdated);
 
             entityTransaction.commit();
+            update = rowsUpdated>0;
         }catch (Exception e){
-            if(entityTransaction.isActive()&&entityTransaction!=null){
+            if(entityTransaction!=null && entityTransaction.isActive()){
                 entityTransaction.rollback();
             }
+            e.printStackTrace();
         }finally {
             entityManager.close();
         }
 
-
+     return update;
     }
 }

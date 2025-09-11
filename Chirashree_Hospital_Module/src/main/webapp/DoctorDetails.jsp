@@ -30,37 +30,6 @@
                 background-position: center;
                 height: 100vh;">
 
-    <div class="card shadow-lg p-4" style="width: 100%; max-width: 400px;">
-        <h3 class="text-success text-center mb-4">Admin Login</h3>
-
-        <form action="sendOtp" method="post">
-            <div class="mb-3">
-                <div class="input-group">
-                    <input type="email" class="form-control" name="email" id="email"
-                           placeholder="Enter your email" oninput="validateEmail()" onchange="checkEmail()" value="${dto.email}" required>
-
-                </div>
-                <div id="emailError" class="form-text text-danger"></div>
-
-            </div>
-
-            <!-- Error Message -->
-            <c:if test="${not empty error}">
-                <div class="alert alert-danger py-2 mb-2">${error}</div>
-            </c:if>
-
-            <!-- Success Message -->
-            <c:if test="${not empty success}">
-                <div class="alert alert-success py-2 mb-2">${success}</div>
-            </c:if>
-
-            <button type="submit" class="btn btn-success w-100 fw-semibold">Send OTP</button>
-        </form>
-
-        <div class="text-center mt-3 text-muted">
-            <small>You will receive a 6-digit OTP via email.</small>
-        </div>
-    </div>
 
 </section>
 

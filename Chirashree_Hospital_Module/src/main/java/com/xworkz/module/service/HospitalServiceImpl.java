@@ -1,7 +1,9 @@
 package com.xworkz.module.service;
 
 import com.xworkz.module.repository.HospitalRepo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.mail.Message;
@@ -14,33 +16,66 @@ import java.time.LocalDateTime;
 import java.util.Properties;
 import java.util.Random;
 
-
+@Slf4j
 @Service
 public class HospitalServiceImpl implements HospitalService {
 
     @Autowired
   private   HospitalRepo hospitalRepo;
+
     @Override
     public int emailCount(String email) {
 
         return Math.toIntExact(hospitalRepo.countEmail(email));
     }
 
+    private String generatedOtp = "";
+    private LocalDateTime otpGeneratedTime;
+
     @Override
-    public void sendOtp(String email) {
-
+    public boolean sendOtp(String email) {
+        // ✅ Generate 6-digit OTP
         Random random = new Random();
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i=0;i<6;i++){
-            stringBuilder.append(random.nextInt(10));
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < 6; i++) {
+            sb.append(random.nextInt(10));
         }
-        String generatedOtp = stringBuilder.toString();
+        generatedOtp = sb.toString();
+        otpGeneratedTime = LocalDateTime.now();
 
-        hospitalRepo.updateOTp(email, LocalDateTime.now(),generatedOtp);
+        // ✅ Encode OTP before saving
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String encodedOtp = encoder.encode(generatedOtp);
 
-        sendEmailOtp(email,"OTP sent","Dear User,\nYour OTP is: "+generatedOtp + "\n It will expire in 5 minutes");
+        boolean result = hospitalRepo.updateOTp(email, otpGeneratedTime, encodedOtp);
+        if (result) {
+            sendEmailOtp(email, "OTP Sent",
+                    "Dear User,\nYour OTP is: " + generatedOtp + "\nIt will expire in 2 minutes.");
+            log.info("OTP generated: {} for email {}", generatedOtp, email);
+            return true;
+        } else {
+            log.error("Failed to save OTP for email: {}", email);
+            return false;
+        }
     }
 
+    @Override
+    public boolean checkOtp(String otp, LocalDateTime sentTime) {
+        // ✅ Check expiry (2 minutes)
+        if (sentTime.plusMinutes(2).isBefore(LocalDateTime.now())) {
+            log.warn("OTP expired.");
+            return false;
+        }
+
+        // ✅ Compare entered OTP with generated one
+        if (otp.equals(generatedOtp)) {
+            log.info("OTP matched successfully.");
+            return true;
+        } else {
+            log.info("OTP did not match.");
+            return false;
+        }
+    }
 
 
     private void sendEmailOtp(String email, String subject, String body) {

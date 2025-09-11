@@ -23,25 +23,37 @@
             </a>
             <ul class="nav">
                 <li class="nav-item">
-                    <a class="nav-link fw-semibold text-success" href="admin">Admin Login</a>
+                    <a class="nav-link fw-semibold text-success" href="admin">Home</a>
                 </li>
             </ul>
         </div>
     </nav>
+
+
 </header>
 <!-- Bootstrap background image section -->
-<section class="bg-image d-flex justify-content-center align-items-center text-center"
+<!-- Bootstrap background image section -->
+<!-- Bootstrap background image section -->
+<section class="bg-image d-flex"
          style="background-image: url('/Chirashree_Hospital_Module/resources/images/hospital.png');
                 background-size: cover;
                 background-position: center;
-                height: 100vh;">
+                min-height: 100vh; margin: 0;">
 
-    <div class="p-5 rounded-4 bg-white bg-opacity-75">
-        <h1 class="display-4 fw-bold text-success">Welcome to Healing Hands Hospital</h1>
-        <p class="lead text-dark">Compassion. Care. Cure.</p>
-        <a href="#" class="btn btn-success btn-lg mt-3">Learn More</a>
+    <!-- Sidebar Card -->
+    <div class="card shadow-lg p-4 rounded-0 border-0"
+         style="width: 300px; height: 100vh; background: rgba(255,255,255,0.9);">
+        <h3 class="text-success mb-3">Admin Dashboard</h3>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link text-success fw-bold" href="doctors">Doctor Details</a>
+            </li>
+            <!-- Uncomment more items if needed -->
+        </ul>
     </div>
 </section>
+
+
 
 <!-- Footer -->
 <footer class="bg-success text-white text-center py-3 mt-auto">

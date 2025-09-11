@@ -9,5 +9,5 @@ public interface HospitalRepo {
 
     Long countEmail(String email);
 
-    void updateOTp(String email, LocalDateTime time, String otp);
+    boolean updateOTp(String email, LocalDateTime time, String otp);
 }

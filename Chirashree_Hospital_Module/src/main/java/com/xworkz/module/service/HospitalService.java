@@ -9,5 +9,7 @@ public interface HospitalService {
 
     int emailCount(String email);
 
-    void sendOtp(String email);
+    boolean sendOtp(String email);
+
+     boolean checkOtp(String otp, LocalDateTime sentTime);
 }

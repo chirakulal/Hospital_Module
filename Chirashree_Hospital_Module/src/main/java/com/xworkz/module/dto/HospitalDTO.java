@@ -19,7 +19,7 @@ public class HospitalDTO {
     private String email;
 
     @NotNull(message = "Should not be empty")
-    private int otp;
+    private String otp;
 
     private String password;
     private LocalDateTime time;
