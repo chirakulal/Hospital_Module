@@ -1,6 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page isELIgnored="false" %>
-<html lang="en">
+<html lang="en" xmlns:c="http://www.w3.org/1999/XSL/Transform">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -56,11 +56,12 @@
             <button type="submit" class="btn btn-success w-100 fw-semibold mb-2">Login</button>
         </form>
 
-        <!-- Resend OTP -->
-        <button id="resendOtpBtn" class="btn btn-outline-success w-100 fw-semibold" type="button" disabled>
-            Resend OTP (<span id="timer">120</span>s)
-        </button>
-
+        <form id="resendForm" action="resendOtp" method="post" class="w-100">
+            <input type="hidden" name="email" value="${email}">
+            <button id="resendOtpBtn" class="btn btn-outline-success w-100 fw-semibold" type="submit" disabled>
+                Resend OTP (<span id="timer">${remainingSeconds}</span>s)
+            </button>
+        </form>
         <div class="text-center mt-2 text-muted">
             <small>You can resend the OTP after 2 minutes.</small>
         </div>
@@ -82,31 +83,29 @@
 
 <script>
     window.addEventListener("DOMContentLoaded", () => {
-        let timeLeft = ${remainingSeconds != null ? remainingSeconds : 120};
+        // Use the value passed from the backend controller
+        let timeLeft = parseInt('${remainingSeconds}');
         const timerElement = document.getElementById("timer");
         const resendBtn = document.getElementById("resendOtpBtn");
 
-        const countdown = setInterval(() => {
-            timeLeft--;
-            timerElement.textContent = timeLeft;
+        // Only start the countdown if there is time left
+        if (timeLeft > 0) {
+            const countdown = setInterval(() => {
+                timeLeft--;
+                timerElement.textContent = timeLeft;
 
-            if (timeLeft <= 0) {
-                clearInterval(countdown);
-                timerElement.textContent = "0";
-                resendBtn.disabled = false;
-                resendBtn.textContent = "Resend OTP";
-            }
-        }, 1000);
-
-        resendBtn.addEventListener("click", () => {
-            resendBtn.disabled = true;
-            resendBtn.textContent = "Resending...";
-            fetch("resendOtp", {
-                method: "POST",
-                headers: {"Content-Type": "application/x-www-form-urlencoded"},
-                body: "email=${email}"
-            }).then(() => location.reload());
-        });
+                if (timeLeft <= 0) {
+                    clearInterval(countdown);
+                    resendBtn.disabled = false;
+                    // Update button text to be cleaner
+                    resendBtn.innerHTML = "Resend OTP";
+                }
+            }, 1000);
+        } else {
+            // If time is already 0, enable the button immediately
+            resendBtn.disabled = false;
+            resendBtn.innerHTML = "Resend OTP";
+        }
     });
 </script>
 

@@ -1,5 +1,6 @@
 package com.xworkz.module.repository;
 
+import com.xworkz.module.entity.DoctorEntity;
 import com.xworkz.module.entity.HospitalEntity;
 import org.springframework.stereotype.Repository;
 
@@ -13,4 +14,6 @@ public interface HospitalRepo {
     boolean updateOTp(String email, LocalDateTime time, String otp);
 
     HospitalEntity getEmail(String email);
+
+    boolean saveData(DoctorEntity doctorEntity);
 }

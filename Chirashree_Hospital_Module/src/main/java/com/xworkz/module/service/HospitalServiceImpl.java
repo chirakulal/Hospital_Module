@@ -1,5 +1,8 @@
 package com.xworkz.module.service;
 
+import com.xworkz.module.dto.DoctorDTO;
+import com.xworkz.module.dto.HospitalDTO;
+import com.xworkz.module.entity.DoctorEntity;
 import com.xworkz.module.entity.HospitalEntity;
 import com.xworkz.module.repository.HospitalRepo;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +16,7 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Properties;
 import java.util.Random;
@@ -24,71 +28,85 @@ public class HospitalServiceImpl implements HospitalService {
     @Autowired
   private   HospitalRepo hospitalRepo;
 
+    private HospitalDTO hospitalDTO;
+
+    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
     @Override
     public int emailCount(String email) {
 
         return Math.toIntExact(hospitalRepo.countEmail(email));
     }
 
-    private String generatedOtp = "";
-    private LocalDateTime otpGeneratedTime;
+
 
     @Override
     public boolean sendOtp(String email) {
+        try {
+            Random random = new Random();
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < 6; i++) {
+                sb.append(random.nextInt(10));
+            }
+            String generatedOtp = sb.toString();
+            LocalDateTime otpGeneratedTime = LocalDateTime.now();
 
-        Random random = new Random();
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < 6; i++) {
-            sb.append(random.nextInt(10));
-        }
-        generatedOtp = sb.toString();
-        otpGeneratedTime = LocalDateTime.now();
 
 
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        String encodedOtp = encoder.encode(generatedOtp);
+            String encodedOtp = encoder.encode(generatedOtp);
 
-        boolean result = hospitalRepo.updateOTp(email, otpGeneratedTime, encodedOtp);
-        if (result) {
-            sendEmailOtp(email, "OTP Sent",
-                    "Dear User,\nYour OTP is: " + generatedOtp + "\nIt will expire in 2 minutes.");
-            log.info("OTP generated: {} for email {}", generatedOtp, email);
-            return true;
-        } else {
-            log.error("Failed to save OTP for email: {}", email);
+            boolean result = hospitalRepo.updateOTp(email, otpGeneratedTime, encodedOtp);
+            if (result) {
+                sendEmailOtp(email, "OTP Sent",
+                        "Dear User,\nYour OTP is: " + generatedOtp + "\nIt will expire in 2 minutes.");
+                log.info("OTP generated: {} for email {}", generatedOtp, email);
+                return true;
+            } else {
+                log.error("Failed to save OTP for email: {}", email);
+                return false;
+            }
+        }catch (Exception e){
+            log.error("Error in sendOtp service", e);
             return false;
         }
     }
 
     @Override
-    public boolean checkOtp(String otp, LocalDateTime sentTime, String email) {
-
-        if (sentTime.plusMinutes(2).isBefore(LocalDateTime.now())) {
-            log.warn("OTP expired.");
-            return false;
-        }
-
+    public boolean checkOtp(String otp, String email) {
 
         HospitalEntity hospitalEntity = hospitalRepo.getEmail(email);
-        String storedEncodedOtp = hospitalEntity.getOtp();
-
-        if (storedEncodedOtp == null) {
-            log.error("No OTP found for email {}", email);
+        if(hospitalEntity.getEmail()==null || hospitalEntity.getOtp()==null || hospitalEntity.getTime()==null){
             return false;
         }
 
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+      Long secondsElapsed = Duration.between(hospitalEntity.getTime(),LocalDateTime.now()).getSeconds();
 
-        if (encoder.matches(otp, storedEncodedOtp)) {
-            log.info("OTP matched successfully for email {}", email);
+        if (secondsElapsed > 120) {
+            hospitalRepo.updateOTp(email,null,null);
+            log.warn("OTP for {} has expired.", email);
+            return false; // OTP expired
+        }
+
+        if(encoder.matches(otp,hospitalEntity.getOtp())){
+            hospitalRepo.updateOTp(email,null,null);
+            log.info("OTP verified is successfully for {}",email);
             return true;
-        } else {
-            log.info("OTP did not match for email {}", email);
-            return false;
         }
+        return false;
+
     }
 
+    @Override
+    public int getRemainingCooldownSeconds(String email) {
+        HospitalEntity hospitalEntity = hospitalRepo.getEmail(email);
+        if(hospitalEntity ==null || hospitalEntity.getOtp()==null){
+            return 0;
+        }
 
+        long seconds = Duration.between(hospitalEntity.getTime(),LocalDateTime.now()).getSeconds();
+        return (int) Math.max(0,120-seconds);
+
+    }
 
     private void sendEmailOtp(String email, String subject, String body) {
         final String username = "chirashreelk@gmail.com";
@@ -122,5 +140,27 @@ public class HospitalServiceImpl implements HospitalService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+
+    @Override
+    public boolean saveData(DoctorDTO doctorDTO) {
+        DoctorEntity doctorEntity = new DoctorEntity();
+
+
+        doctorEntity.setFirstName(doctorDTO.getFirstName());
+        doctorEntity.setLastName(doctorDTO.getLastName());
+        doctorEntity.setEmail(doctorDTO.getEmail());
+        doctorEntity.setPhone(doctorDTO.getPhone());
+        doctorEntity.setSpecialization(doctorDTO.getSpecialization());
+        doctorEntity.setExperience(doctorDTO.getExperience());
+        doctorEntity.setImage(doctorDTO.getImage());
+        doctorEntity.setAddress(doctorDTO.getAddress());
+        doctorEntity.setTimingStart(doctorDTO.getTimingStart());
+        doctorEntity.setTimingEnd(doctorDTO.getTimingEnd());
+
+
+
+        return hospitalRepo.saveData(doctorEntity);
     }
 }

@@ -1,5 +1,6 @@
 package com.xworkz.module.repository;
 
+import com.xworkz.module.entity.DoctorEntity;
 import com.xworkz.module.entity.HospitalEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -116,6 +117,32 @@ public class HospitalRepoImpl implements HospitalRepo{
         return null;
         }
 
+    @Override
+    public boolean saveData(DoctorEntity doctorEntity) {
+
+        EntityManager entityManager = null;
+        EntityTransaction entityTransaction = null;
+
+        try{
+            entityManager = entityManagerFactory.createEntityManager();
+            entityTransaction = entityManager.getTransaction();
+
+            entityTransaction.begin();
+            entityManager.persist(doctorEntity);
+            entityTransaction.commit();
+
+            return true;
+        }catch (Exception e){
+            if(entityTransaction !=null && entityTransaction.isActive()){
+                entityTransaction.rollback();
+            }
+            e.printStackTrace();
+        }finally {
+            entityManager.close();
+        }
 
 
+
+        return false;
+    }
 }

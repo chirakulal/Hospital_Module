@@ -1,5 +1,7 @@
 package com.xworkz.module.service;
 
+import com.xworkz.module.dto.DoctorDTO;
+import com.xworkz.module.entity.DoctorEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -11,5 +13,9 @@ public interface HospitalService {
 
     boolean sendOtp(String email);
 
-     boolean checkOtp(String otp, LocalDateTime sentTime, String email);
+     boolean checkOtp(String otp, String email);
+
+    int getRemainingCooldownSeconds(String email);
+
+    boolean saveData(DoctorDTO doctorDTO);
 }
