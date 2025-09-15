@@ -47,13 +47,13 @@
 
                 <div class="col-md-6">
                     <label for="email" class="form-label fw-semibold">Email</label>
-                    <input type="email" class="form-control" id="email" name="email" oninput="validateEmail()" placeholder="doctor@example.com" required>
+                    <input type="email" class="form-control" id="email" name="email" oninput="validateEmail()" onchange="CheckEmail()" placeholder="doctor@example.com" required>
                     <div id="emailError" class="form-text text-danger"></div>
                 </div>
 
                 <div class="col-md-6">
                     <label for="phone" class="form-label fw-semibold">Phone Number</label>
-                    <input type="tel" class="form-control" id="phone" name="phone" oninput="validatePhone()" placeholder="Enter phone number" required>
+                    <input type="tel" class="form-control" id="phone" name="phone" oninput="validatePhone()" onchange="CheckPhoneNumber()" placeholder="Enter phone number" required>
                     <div id="phoneError" class="form-text text-danger"></div>
                 </div>
 

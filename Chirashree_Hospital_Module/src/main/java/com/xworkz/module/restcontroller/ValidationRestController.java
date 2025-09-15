@@ -25,4 +25,25 @@ public class ValidationRestController {
 
     }
 
+    @GetMapping("CheckLastName/{lastname}")
+    public String checkLastNameCount(@PathVariable String lastName){
+        log.info(lastName);
+        int count = hospitalService.countLastName(lastName);
+        log.info(String.valueOf(count));
+        if(count==0) return "";
+        else return "Email already exist";
+
+    }
+
+
+    @GetMapping("CheckLastName/{CheckPhoneNumber}")
+    public String checkPhoneNUmber(@PathVariable String CheckPhoneNumber){
+        log.info(CheckPhoneNumber);
+        int count = hospitalService.countPhoneNumber(CheckPhoneNumber);
+        log.info(String.valueOf(count));
+        if(count==0) return "";
+        else return "Email already exist";
+
+    }
+
 }

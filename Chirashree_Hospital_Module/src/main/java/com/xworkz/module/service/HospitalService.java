@@ -18,4 +18,8 @@ public interface HospitalService {
     int getRemainingCooldownSeconds(String email);
 
     boolean saveData(DoctorDTO doctorDTO);
+
+    int countLastName(String lastName);
+
+    int countPhoneNumber(String phone);
 }

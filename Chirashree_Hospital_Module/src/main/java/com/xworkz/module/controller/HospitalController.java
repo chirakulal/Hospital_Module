@@ -133,16 +133,6 @@ public class HospitalController {
     @PostMapping("saveDoctor")
     public ModelAndView SaveDoctor(ModelAndView modelAndView, BindingResult bindingResult, DoctorDTO doctorDTO, @RequestParam("profilePicture") MultipartFile multipartFile ) throws IOException {
 
-        byte[] bytes=multipartFile .getBytes();
-
-        Path path= Paths.get("D:\\chiraimage\\HospitalProject\\DoctorProfile\\"+doctorDTO.getFirstName()+System.currentTimeMillis()+".jpg");
-
-        Files.write(path,bytes);
-        String image=path.getFileName().toString();
-        doctorDTO.setImage(path.toString());
-
-        System.out.println("image name"+image);
-        log.info("Customer DTO: {}", doctorDTO.getImage());
 
 
 
@@ -156,6 +146,30 @@ public class HospitalController {
               return modelAndView;
 
           }
+
+            // Handle file upload
+            if (!multipartFile.isEmpty()) {
+                // Generate unique file name
+                String fileName = doctorDTO.getFirstName() + "_" + System.currentTimeMillis() + ".jpg";
+
+                Path uploadPath = Paths.get("D:\\chiraimage\\HospitalProject\\DoctorProfile\\");
+
+                if (!Files.exists(uploadPath)) {
+                    Files.createDirectories(uploadPath);
+                }
+
+                Path filePath = uploadPath.resolve(fileName);
+                Files.write(filePath, multipartFile.getBytes());
+
+                // Save only fileName (not full path) in DB
+                doctorDTO.setImage(fileName);
+
+                log.info("Profile Picture Uploaded: {}", fileName);
+            } else {
+                modelAndView.addObject("error", "Profile picture is required");
+                modelAndView.setViewName("DoctorDetails");
+                return modelAndView;
+            }
 
 
 

@@ -18,7 +18,7 @@ public class DoctorDTO {
     private String firstName;
 
     @NotNull(message = "Name should not be empty")
-    @Size(min=3,max=20,message = "name should contain between 3-20 character")
+    @Size(min=1,max=20,message = "name should contain between 3-20 character")
     private String lastName;
 
     @NotNull(message = "Email should not be empty")

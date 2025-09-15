@@ -39,44 +39,32 @@ error.textContent=" "
 
 }
 
-//function CheckFirstName(){
-//let name = document.getElementById("firstName").value;
-//let error = document.getElementById("firstnameError");
-//
-//const xhttp = new XMLHttpRequest();
-//
-//xhttp.open("GET","http://localhost:8080/Chirashree_Hospital_Module/CheckFirstName"+name);
-//xhttp.send();
-//
-//xhttp.onload = function(){
-//error.innerHTML = this.responseText;
-//}
-//}
+
 
  function validateLastName() {
         let lastname = document.getElementById("lastName").value.trim();
         let error = document.getElementById("lastnameError");
 
-        if (lastname.length < 3 || lastname.length > 20) {
+        if (lastname.length < 0 || lastname.length > 20) {
             error.textContent = "Last name must be between 3 and 20 characters";
         } else {
             error.textContent = "";
         }
     }
 
-//function CheckLastName(){
-//let name = document.getElementById("lastName").value;
-//let error = document.getElementById("lastnameError");
-//
-//const xhttp = new XMLHttpRequest();
-//
-//xhttp.open("GET","http://localhost:8080/Chirashree_Hospital_Module/CheckLastName"+name);
-//xhttp.send();
-//
-//xhttp.onload = function(){
-//error.innerHTML = this.responseText;
-//}
-//}
+function CheckLastName(){
+let lastname = document.getElementById("lastName").value;
+let error = document.getElementById("lastnameError");
+
+const xhttp = new XMLHttpRequest();
+
+xhttp.open("GET","http://localhost:8080/Chirashree_Hospital_Module/CheckLastName"+lastname);
+xhttp.send();
+
+xhttp.onload = function(){
+error.innerHTML = this.responseText;
+}
+}
 
   function validatePhone() {
         let phone = document.getElementById("phone").value.trim();
@@ -89,6 +77,22 @@ error.textContent=" "
             error.textContent = "";
         }
     }
+
+
+    function CheckPhoneNumber(){
+    let phoneNumber = document.getElementById("phone").value;
+    let error = document.getElementById("phoneError");
+
+    const xhttp = new XMLHttpRequest();
+
+    xhttp.open("GET","http://localhost:8080/Chirashree_Hospital_Module/CheckPhoneNumber"+phoneNumber);
+    xhttp.send();
+
+    xhttp.onload = function(){
+    error.innerHTML = this.responseText;
+    }
+    }
+
 
       function validateExperience() {
             let exp = document.getElementById("experience").value;

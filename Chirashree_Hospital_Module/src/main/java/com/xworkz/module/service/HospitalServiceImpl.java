@@ -88,7 +88,6 @@ public class HospitalServiceImpl implements HospitalService {
         }
 
         if(encoder.matches(otp,hospitalEntity.getOtp())){
-            hospitalRepo.updateOTp(email,null,null);
             log.info("OTP verified is successfully for {}",email);
             return true;
         }
@@ -162,5 +161,15 @@ public class HospitalServiceImpl implements HospitalService {
 
 
         return hospitalRepo.saveData(doctorEntity);
+    }
+
+    @Override
+    public int countLastName(String lastName) {
+        return Math.toIntExact(hospitalRepo.countLastName(lastName));
+    }
+
+    @Override
+    public int countPhoneNumber(String phone) {
+        return Math.toIntExact(hospitalRepo.countPhoneNumber(phone));
     }
 }

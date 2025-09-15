@@ -145,4 +145,56 @@ public class HospitalRepoImpl implements HospitalRepo{
 
         return false;
     }
+
+
+    public Long countLastName(String lastName) {
+        EntityManager entityManager=null;
+        EntityTransaction entityTransaction = null;
+        long count=0;
+        try {
+            entityManager = entityManagerFactory.createEntityManager();
+            entityTransaction = entityManager.getTransaction();
+
+            entityTransaction.begin();
+            Query query = entityManager.createNamedQuery("countLastname");
+            query.setParameter("lastName", lastName);
+            count = (long) query.getSingleResult();
+            entityTransaction.commit();
+        }catch (Exception e){
+            if(entityTransaction!=null && entityTransaction.isActive()){
+                entityTransaction.rollback();
+            }
+            e.printStackTrace();
+        }finally {
+            entityManager.close();
+        }
+
+        return count;
+    }
+
+    @Override
+    public Long countPhoneNumber(String phone) {
+        EntityManager entityManager=null;
+        EntityTransaction entityTransaction = null;
+        long count=0;
+        try {
+            entityManager = entityManagerFactory.createEntityManager();
+            entityTransaction = entityManager.getTransaction();
+
+            entityTransaction.begin();
+            Query query = entityManager.createNamedQuery("countLastname");
+            query.setParameter("phone", phone);
+            count = (long) query.getSingleResult();
+            entityTransaction.commit();
+        }catch (Exception e){
+            if(entityTransaction!=null && entityTransaction.isActive()){
+                entityTransaction.rollback();
+            }
+            e.printStackTrace();
+        }finally {
+            entityManager.close();
+        }
+
+        return count;
+    }
 }

@@ -12,6 +12,8 @@ import java.sql.Time;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@NamedQuery(name = "countLastname",query = "Select count(e.lastName) from DoctorEntity e where e.lastName =:lastName")
+@NamedQuery(name = "countPhoneNumber",query = "Select count(e.phone) from  DoctorEntity e where e.phone =:phone")
 public class DoctorEntity {
 
     @Id

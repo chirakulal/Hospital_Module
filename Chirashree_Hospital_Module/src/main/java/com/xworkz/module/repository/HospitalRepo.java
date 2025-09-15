@@ -16,4 +16,8 @@ public interface HospitalRepo {
     HospitalEntity getEmail(String email);
 
     boolean saveData(DoctorEntity doctorEntity);
+
+    Long countLastName(String lastName);
+
+     Long countPhoneNumber(String phone);
 }
