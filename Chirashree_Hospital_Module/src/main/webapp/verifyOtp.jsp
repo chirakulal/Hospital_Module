@@ -1,6 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page isELIgnored="false" %>
-<html lang="en" xmlns:c="http://www.w3.org/1999/XSL/Transform">
+<html lang="en" xmlns:c="http://www.w3.org/1999/XSL/Transform" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -108,6 +108,7 @@
         }
     });
 </script>
+<script src="validation.js"></script>
 
 </body>
 </html>

@@ -3,8 +3,10 @@ package com.xworkz.module.controller;
 
 import com.xworkz.module.dto.DoctorDTO;
 import com.xworkz.module.dto.HospitalDTO;
+import com.xworkz.module.dto.TimeSlotDTO;
 import com.xworkz.module.service.HospitalService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Controller;
@@ -16,11 +18,13 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Controller
@@ -47,12 +51,12 @@ public class HospitalController {
     }
     @PostMapping("sendOtp")
     public ModelAndView sendOtp(ModelAndView modelAndView,
-                                @RequestParam String email) {
+                                @RequestParam String email,HttpSession httpSession) {
+
 
         try {
             boolean result = hospitalService.sendOtp(email);
             if (result) {
-
                 modelAndView.addObject("success", "OTP sent successfully!");
                 modelAndView.addObject("email",email);
                 modelAndView.addObject("remainingSeconds", 120);
@@ -78,8 +82,13 @@ public class HospitalController {
     @PostMapping("verifyOtp")
     public ModelAndView verifyOtp(ModelAndView modelAndView,
                                   @RequestParam String otp,
-                                  @RequestParam String email) {
+                                  @RequestParam String email,
+                                  HttpSession session) {
 
+        if (session.getAttribute("loggedInUser") != null) {
+            modelAndView.setViewName("redirect:/dashboard-success");
+            return modelAndView;
+        }
 
         boolean check = hospitalService.checkOtp(otp,  email);
         if (!check) {
@@ -89,8 +98,9 @@ public class HospitalController {
             modelAndView.addObject("remainingSeconds", remaining);
             modelAndView.setViewName("verifyOtp");
         } else {
+            session.setAttribute("loggedInUser", email);
             modelAndView.addObject("success", "OTP verified successfully!");
-            modelAndView.setViewName("Home");
+            modelAndView.setViewName("redirect:/dashboard-success");
         }
 
         return modelAndView;
@@ -123,67 +133,98 @@ public class HospitalController {
         return modelAndView;
     }
 
-    @GetMapping("doctors")
-    public ModelAndView DoctorPage(ModelAndView modelAndView){
+    @GetMapping("dashboard-success")
+    public ModelAndView dashboardSuccess(ModelAndView modelAndView, HttpSession session) {
+        if (session.getAttribute("loggedInUser") == null) {
+            modelAndView.setViewName("redirect:/admin"); // redirect if not logged in
+        } else {
+            modelAndView.setViewName("DashboardPageWithHistory");
+        }
+        return modelAndView;
+    }
 
+
+    @GetMapping("doctor")
+    public ModelAndView DoctorPage(ModelAndView modelAndView,HttpSession httpSession){
         modelAndView.setViewName("DoctorDetails");
         return modelAndView;
     }
 
+    @GetMapping("logout")
+    public ModelAndView logout(ModelAndView modelAndView, HttpSession session) {
+        session.invalidate(); // Invalidate the entire session
+        modelAndView.setViewName("redirect:/admin"); // Redirect to login page
+        return modelAndView;
+    }
+
     @PostMapping("saveDoctor")
-    public ModelAndView SaveDoctor(ModelAndView modelAndView, BindingResult bindingResult, DoctorDTO doctorDTO, @RequestParam("profilePicture") MultipartFile multipartFile ) throws IOException {
-
-
-
-
-        if(bindingResult.hasErrors()){
-          List<ObjectError> objectErrorList =  bindingResult.getAllErrors();
-          for(ObjectError objectError:objectErrorList){
-              log.info("{}",objectError);
-              modelAndView.addObject("error",objectError.getDefaultMessage());
-              modelAndView.setViewName("DoctorDetails");
-              modelAndView.addObject("dto",doctorDTO);
-              return modelAndView;
-
-          }
-
-            // Handle file upload
-            if (!multipartFile.isEmpty()) {
-                // Generate unique file name
-                String fileName = doctorDTO.getFirstName() + "_" + System.currentTimeMillis() + ".jpg";
-
-                Path uploadPath = Paths.get("D:\\chiraimage\\HospitalProject\\DoctorProfile\\");
-
-                if (!Files.exists(uploadPath)) {
-                    Files.createDirectories(uploadPath);
-                }
-
-                Path filePath = uploadPath.resolve(fileName);
-                Files.write(filePath, multipartFile.getBytes());
-
-                // Save only fileName (not full path) in DB
-                doctorDTO.setImage(fileName);
-
-                log.info("Profile Picture Uploaded: {}", fileName);
-            } else {
-                modelAndView.addObject("error", "Profile picture is required");
-                modelAndView.setViewName("DoctorDetails");
-                return modelAndView;
+    public ModelAndView SaveDoctor(@RequestParam("images") MultipartFile multipartFile, ModelAndView modelAndView, BindingResult bindingResult, @Valid DoctorDTO doctorDTO ) throws IOException {
+        // 1. Check for validation errors from form data.
+        if (bindingResult.hasErrors()) {
+            for (ObjectError objectError : bindingResult.getAllErrors()) {
+                log.info("Validation error: {}", objectError.getDefaultMessage());
             }
+            modelAndView.addObject("errors", bindingResult.getAllErrors());
+            modelAndView.addObject("dto", doctorDTO);
+            modelAndView.setViewName("DoctorDetails");
+            return modelAndView;
+        }
+
+        String originalExtension = FilenameUtils.getExtension(multipartFile.getOriginalFilename());
+        String fileName = doctorDTO.getFirstName() + "_" + System.currentTimeMillis() + "." + originalExtension;
+        Path uploadPath = Paths.get("D:\\chiraimage\\" + fileName);
+        Files.write(uploadPath, multipartFile.getBytes());
+        doctorDTO.setImage(fileName);
+        log.info("Profile picture uploaded: {}", fileName);
 
 
-
-         boolean result =   hospitalService.saveData(doctorDTO);
+        boolean result =   hospitalService.saveData(doctorDTO);
           if(result){
               modelAndView.addObject("success", "Registered Successfully");
               modelAndView.setViewName("DoctorDetails");
           }
-        }
-
-
-
 
         return modelAndView;
     }
+    @GetMapping("slot")
+    public ModelAndView SlotTime(ModelAndView modelAndView,HttpSession httpSession){
+        modelAndView.setViewName("Slot");
+        return modelAndView;
+    }
+
+    @PostMapping("saveTime")
+    public ModelAndView saveTimeSlots(ModelAndView modelAndView, TimeSlotDTO timeSlotDTO){
+
+        boolean result =   hospitalService.saveTimeSlot(timeSlotDTO);
+        if(result){
+            modelAndView.addObject("success", "Registered Successfully");
+            modelAndView.setViewName("Slot");
+            return modelAndView;
+        }
+
+        return modelAndView;
+    }
+
+    @GetMapping("addslot")
+    public ModelAndView addSlot(ModelAndView modelAndView,HttpSession httpSession){
+        modelAndView.setViewName("AddSlot");
+        return modelAndView;
+    }
+
+    @GetMapping("/schedule")
+  public ModelAndView SlotDetails(ModelAndView modelAndView){
+        List<String> doctorNames =hospitalService.getAllNames();
+
+        List<LocalTime> timeList = hospitalService.getTime();
+
+
+        modelAndView.addObject("doctorNames", doctorNames);
+        modelAndView.addObject("timeList", timeList);
+
+
+        modelAndView.setViewName("AddSlot"); // your JSP
+        return modelAndView;
+  }
+
 
 }

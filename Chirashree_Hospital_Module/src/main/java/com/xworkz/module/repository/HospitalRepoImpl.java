@@ -2,6 +2,7 @@ package com.xworkz.module.repository;
 
 import com.xworkz.module.entity.DoctorEntity;
 import com.xworkz.module.entity.HospitalEntity;
+import com.xworkz.module.entity.TimeEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +12,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
+import java.sql.Time;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Collections;
+import java.util.List;
 
 @Repository
 public class HospitalRepoImpl implements HospitalRepo{
@@ -197,4 +202,83 @@ public class HospitalRepoImpl implements HospitalRepo{
 
         return count;
     }
+
+    @Override
+    public boolean saveTimeSlots(TimeEntity timeEntity) {
+        EntityManager entityManager = null;
+        EntityTransaction entityTransaction = null;
+
+        try{
+            entityManager = entityManagerFactory.createEntityManager();
+            entityTransaction = entityManager.getTransaction();
+
+            entityTransaction.begin();
+            entityManager.persist(timeEntity);
+            entityTransaction.commit();
+
+            return true;
+        }catch (Exception e){
+            if(entityTransaction !=null && entityTransaction.isActive()){
+                entityTransaction.rollback();
+            }
+            e.printStackTrace();
+        }finally {
+            entityManager.close();
+        }
+
+
+        return false;
+    }
+
+    @Override
+    public List<String> getAllNames() {
+        EntityManager entityManager =null;
+        EntityTransaction entityTransaction =null;
+        List<String> list = null;
+
+        try{
+            entityManager =entityManagerFactory.createEntityManager();
+            entityTransaction=entityManager.getTransaction();
+            entityTransaction.begin();
+            Query query =entityManager.createNamedQuery("getAllName");
+           list = query.getResultList();
+
+            return list;
+        }catch (Exception e){
+            if(entityTransaction !=null && entityTransaction.isActive()){
+                entityTransaction.rollback();
+            }
+            e.printStackTrace();
+        }finally {
+            entityManager.close();
+        }
+       return list;
+    }
+
+    @Override
+    public List<LocalTime> getTime() {
+        EntityManager entityManager =null;
+        EntityTransaction entityTransaction =null;
+        List<LocalTime> list =null ;
+
+        try{
+            entityManager =entityManagerFactory.createEntityManager();
+            entityTransaction=entityManager.getTransaction();
+            entityTransaction.begin();
+            Query query =entityManager.createNamedQuery("getTime");
+            list = query.getResultList();
+
+            return list;
+        }catch (Exception e){
+            if(entityTransaction !=null && entityTransaction.isActive()){
+                entityTransaction.rollback();
+            }
+            e.printStackTrace();
+        }finally {
+            entityManager.close();
+        }
+        return list;
+    }
+
+
 }

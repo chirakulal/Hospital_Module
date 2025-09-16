@@ -84,9 +84,9 @@
                 </div>
 
                 <div class="col-md-6">
-                    <label for="profilePicture" class="form-label fw-semibold">Profile Picture</label>
-                    <input class="form-control" type="file" id="profilePicture"  name="profilePicture" oninput="validateProfilePicture()">
-                    <div id="profilePictureError" class="form-text text-danger"></div>
+                    <label for="images" class="form-label">Upload Profile Picture</label>
+                    <input type="file" class="form-control" id="images" name="images" accept="images/*" required>
+                    <small id="profilePictureError" class="text-danger"></small>
                 </div>
 
                 <div class="col-md-6">
@@ -100,21 +100,6 @@
                         <label class="form-check-label" for="female">Female</label>
                     </div>
                     <div id="genderError" class="form-text text-danger"></div>
-                </div>
-
-                <div class="col-12 mt-4">
-                    <label class="form-label fw-semibold">Doctor Timings</label>
-                    <div class="row g-2">
-                        <div class="col-md-6">
-                            <label for="timingStart" class="form-label">Start Time</label>
-                            <input type="time" class="form-control" id="timingStart" name="timingStart" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="timingEnd" class="form-label">End Time</label>
-                            <input type="time" class="form-control" id="timingEnd" name="timingEnd" required>
-                        </div>
-                        <div id="timingError" class="form-text text-danger"></div>
-                    </div>
                 </div>
 
                 <div class="col-12 text-center">

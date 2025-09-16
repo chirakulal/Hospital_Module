@@ -2,8 +2,10 @@ package com.xworkz.module.service;
 
 import com.xworkz.module.dto.DoctorDTO;
 import com.xworkz.module.dto.HospitalDTO;
+import com.xworkz.module.dto.TimeSlotDTO;
 import com.xworkz.module.entity.DoctorEntity;
 import com.xworkz.module.entity.HospitalEntity;
+import com.xworkz.module.entity.TimeEntity;
 import com.xworkz.module.repository.HospitalRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,9 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Collections;
+import java.util.List;
 import java.util.Properties;
 import java.util.Random;
 
@@ -30,7 +35,7 @@ public class HospitalServiceImpl implements HospitalService {
 
     private HospitalDTO hospitalDTO;
 
-    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
 
     @Override
     public int emailCount(String email) {
@@ -39,7 +44,7 @@ public class HospitalServiceImpl implements HospitalService {
     }
 
 
-
+   private String generatedOtp ="";
     @Override
     public boolean sendOtp(String email) {
         try {
@@ -48,14 +53,14 @@ public class HospitalServiceImpl implements HospitalService {
             for (int i = 0; i < 6; i++) {
                 sb.append(random.nextInt(10));
             }
-            String generatedOtp = sb.toString();
+            generatedOtp = sb.toString();
             LocalDateTime otpGeneratedTime = LocalDateTime.now();
 
 
 
-            String encodedOtp = encoder.encode(generatedOtp);
 
-            boolean result = hospitalRepo.updateOTp(email, otpGeneratedTime, encodedOtp);
+
+            boolean result = hospitalRepo.updateOTp(email, otpGeneratedTime, generatedOtp);
             if (result) {
                 sendEmailOtp(email, "OTP Sent",
                         "Dear User,\nYour OTP is: " + generatedOtp + "\nIt will expire in 2 minutes.");
@@ -87,7 +92,8 @@ public class HospitalServiceImpl implements HospitalService {
             return false; // OTP expired
         }
 
-        if(encoder.matches(otp,hospitalEntity.getOtp())){
+        if(generatedOtp.matches(otp)){
+            hospitalRepo.updateOTp(email,null,null);
             log.info("OTP verified is successfully for {}",email);
             return true;
         }
@@ -155,8 +161,8 @@ public class HospitalServiceImpl implements HospitalService {
         doctorEntity.setExperience(doctorDTO.getExperience());
         doctorEntity.setImage(doctorDTO.getImage());
         doctorEntity.setAddress(doctorDTO.getAddress());
-        doctorEntity.setTimingStart(doctorDTO.getTimingStart());
-        doctorEntity.setTimingEnd(doctorDTO.getTimingEnd());
+        doctorEntity.setGender(doctorEntity.getGender());
+
 
 
 
@@ -171,5 +177,26 @@ public class HospitalServiceImpl implements HospitalService {
     @Override
     public int countPhoneNumber(String phone) {
         return Math.toIntExact(hospitalRepo.countPhoneNumber(phone));
+    }
+
+    @Override
+    public boolean saveTimeSlot(TimeSlotDTO timeSlotDTO) {
+        TimeEntity time = new TimeEntity();
+
+        time.setStartTime(timeSlotDTO.getStartTime());
+        time.setEndTime(timeSlotDTO.getEndTime());
+
+
+        return hospitalRepo.saveTimeSlots(time);
+    }
+
+    @Override
+    public List<String> getAllNames() {
+        return hospitalRepo.getAllNames();
+    }
+
+    @Override
+    public List<LocalTime> getTime() {
+        return hospitalRepo.getTime();
     }
 }

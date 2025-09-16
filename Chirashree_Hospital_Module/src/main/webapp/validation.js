@@ -11,20 +11,20 @@ function validateEmail(){
     }
 }
 
-//function checkEmail(){
-//let email = document.getElementById("email").value;
-//let emailError = document.getElementById("emailError");
-//
-//const xhttp = new XMLHttpRequest();
-//
-//xhttp.open("GET","http://localhost:8080/Chirashree_Hospital_Module/checkEmail/"+email);
-//xhttp.send();
-//
-//xhttp.onload=function(){
-//emailError.innerHTML=this.responseText;
-//}
-//
-//}
+function checkEmail(){
+let email = document.getElementById("email").value;
+let emailError = document.getElementById("emailError");
+
+const xhttp = new XMLHttpRequest();
+
+xhttp.open("GET","http://localhost:8080/Chirashree_Hospital_Module/checkEmail/"+email);
+xhttp.send();
+
+xhttp.onload=function(){
+emailError.innerHTML=this.responseText;
+}
+
+}
 
 function validateFirstName(){
 let firstname = document.getElementById("firstName").value;
@@ -51,20 +51,20 @@ error.textContent=" "
             error.textContent = "";
         }
     }
-
-function CheckLastName(){
-let lastname = document.getElementById("lastName").value;
-let error = document.getElementById("lastnameError");
-
-const xhttp = new XMLHttpRequest();
-
-xhttp.open("GET","http://localhost:8080/Chirashree_Hospital_Module/CheckLastName"+lastname);
-xhttp.send();
-
-xhttp.onload = function(){
-error.innerHTML = this.responseText;
-}
-}
+//
+//function CheckLastName(){
+//let lastname = document.getElementById("lastName").value.trim();
+//let error = document.getElementById("lastnameError");
+//
+//const xhttp = new XMLHttpRequest();
+//
+//xhttp.open("GET","http://localhost:8080/Chirashree_Hospital_Module/CheckLastName/"+lastname);
+//xhttp.send();
+//
+//xhttp.onload = function(){
+//error.innerHTML = this.responseText;
+//}
+//}
 
   function validatePhone() {
         let phone = document.getElementById("phone").value.trim();
@@ -79,19 +79,19 @@ error.innerHTML = this.responseText;
     }
 
 
-    function CheckPhoneNumber(){
-    let phoneNumber = document.getElementById("phone").value;
-    let error = document.getElementById("phoneError");
-
-    const xhttp = new XMLHttpRequest();
-
-    xhttp.open("GET","http://localhost:8080/Chirashree_Hospital_Module/CheckPhoneNumber"+phoneNumber);
-    xhttp.send();
-
-    xhttp.onload = function(){
-    error.innerHTML = this.responseText;
-    }
-    }
+//    function CheckPhoneNumber(){
+//    let phoneNumber = document.getElementById("phone").value;
+//    let error = document.getElementById("phoneError");
+//
+//    const xhttp = new XMLHttpRequest();
+//
+//    xhttp.open("GET","http://localhost:8080/Chirashree_Hospital_Module/CheckPhoneNumber"+phoneNumber);
+//    xhttp.send();
+//
+//    xhttp.onload = function(){
+//    error.innerHTML = this.responseText;
+//    }
+//    }
 
 
       function validateExperience() {
@@ -140,58 +140,16 @@ error.innerHTML = this.responseText;
            }
        }
 
-function validateTiming() {
-    let start = document.getElementById("timingStart").value;
-    let end = document.getElementById("timingEnd").value;
-    let error = document.getElementById("timingError");
-
-    if (start === "" || end === "") {
-        error.textContent = "Please select both start and end time";
-        return false;
+window.addEventListener('pageshow', function(event) {
+    console.log("pageshow event fired");
+    console.log("persisted:", event.persisted);
+    if (event.persisted) {
+        console.log(" Page loaded from cache, reloading...");
+        window.location.reload();
     }
+});
 
 
-    let startTime = new Date("1970-01-01T" + start + ":00");
-    let endTime = new Date("1970-01-01T" + end + ":00");
-
-    if (endTime <= startTime) {
-        error.textContent = "End time must be later than start time";
-        return false;
-    }
-
-    error.textContent = "";
-    return true;
-}
-
-function validateProfilePicture() {
-    let fileInput = document.getElementById("profilePicture");
-    let error = document.getElementById("profilePictureError");
-    let filePath = fileInput.value;
-
-    if (filePath === "") {
-        error.textContent = "Please upload a profile picture";
-        return false;
-    }
-
-    // Allowed file extensions
-    let allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
-
-    if (!allowedExtensions.exec(filePath)) {
-        error.textContent = "Only JPG, JPEG, PNG, or GIF files are allowed";
-        fileInput.value = ""; // reset the file input
-        return false;
-    }
-
-    // Check file size (e.g., max 2MB)
-    if (fileInput.files[0].size > 2 * 1024 * 1024) {
-        error.textContent = "File size must be less than 2MB";
-        fileInput.value = "";
-        return false;
-    }
-
-    error.textContent = "";
-    return true;
-}
 
 
 

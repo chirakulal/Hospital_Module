@@ -49,10 +49,5 @@ public class DoctorDTO {
     private String gender;
 
 
-    @NotNull(message = "Start time is required")
-    private Time timingStart;
-
-    @NotNull(message = "End time is required")
-    private Time timingEnd;
 
 }

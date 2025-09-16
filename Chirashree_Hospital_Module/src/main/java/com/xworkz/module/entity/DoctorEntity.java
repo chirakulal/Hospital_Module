@@ -12,6 +12,7 @@ import java.sql.Time;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@NamedQuery(name = "DoctorEntity.getAllName",query ="Select concat(d.firstName,' ',d.lastName) from DoctorEntity d ")
 @NamedQuery(name = "countLastname",query = "Select count(e.lastName) from DoctorEntity e where e.lastName =:lastName")
 @NamedQuery(name = "countPhoneNumber",query = "Select count(e.phone) from  DoctorEntity e where e.phone =:phone")
 public class DoctorEntity {
@@ -48,10 +49,6 @@ public class DoctorEntity {
     @Column(name = "gender")
     private String gender;
 
-    @Column(name = "timestart")
-    private Time timingStart;
 
-    @Column(name = "timeend")
-    private Time timingEnd;
 
 }
