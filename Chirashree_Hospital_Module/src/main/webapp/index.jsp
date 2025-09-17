@@ -39,7 +39,7 @@
     <div class="p-5 rounded-4 bg-white bg-opacity-75">
         <h1 class="display-4 fw-bold text-success">Welcome to Healing Hands Hospital</h1>
         <p class="lead text-dark">Compassion. Care. Cure.</p>
-        <a href="#" class="btn btn-success btn-lg mt-3">Learn More</a>
+<!--        <a href="#" class="btn btn-success btn-lg mt-3">Learn More</a>-->
     </div>
 </section>
 

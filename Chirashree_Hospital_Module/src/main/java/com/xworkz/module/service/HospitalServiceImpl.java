@@ -21,6 +21,7 @@ import javax.mail.internet.MimeMessage;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
@@ -161,7 +162,8 @@ public class HospitalServiceImpl implements HospitalService {
         doctorEntity.setExperience(doctorDTO.getExperience());
         doctorEntity.setImage(doctorDTO.getImage());
         doctorEntity.setAddress(doctorDTO.getAddress());
-        doctorEntity.setGender(doctorEntity.getGender());
+        doctorEntity.setGender(doctorDTO.getGender());
+        doctorEntity.setDegree(doctorDTO.getDegree());
 
 
 
@@ -181,10 +183,17 @@ public class HospitalServiceImpl implements HospitalService {
 
     @Override
     public boolean saveTimeSlot(TimeSlotDTO timeSlotDTO) {
+        log.info(timeSlotDTO.getStartTime());
+        log.info(timeSlotDTO.getEndTime());
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mma");
+       LocalTime start = LocalTime.parse(timeSlotDTO.getStartTime().toUpperCase(),formatter);
+       LocalTime end = LocalTime.parse(timeSlotDTO.getEndTime().toUpperCase(),formatter);
         TimeEntity time = new TimeEntity();
 
-        time.setStartTime(timeSlotDTO.getStartTime());
-        time.setEndTime(timeSlotDTO.getEndTime());
+        time.setStartTime(start);
+        time.setEndTime(end);
+
 
 
         return hospitalRepo.saveTimeSlots(time);
@@ -196,7 +205,7 @@ public class HospitalServiceImpl implements HospitalService {
     }
 
     @Override
-    public List<LocalTime> getTime() {
+    public List<String> getTime() {
         return hospitalRepo.getTime();
     }
 }

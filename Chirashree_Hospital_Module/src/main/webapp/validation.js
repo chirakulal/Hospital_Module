@@ -25,19 +25,35 @@ emailError.innerHTML=this.responseText;
 }
 
 }
+function validateFirstName() {
+    let firstname = document.getElementById("firstName").value.trim();
+    let error = document.getElementById("firstnameError");
 
-function validateFirstName(){
-let firstname = document.getElementById("firstName").value;
-let error = document.getElementById("firstnameError");
+    const pattern = /^[A-Za-z\s-]+$/;
 
-if(firstname.length<3||firstname.length>20){
-error.textContent = "name must be between the sizeb of 3 and 20"
 
-}else{
-error.textContent=" "
+    // Empty check
+        if (firstname === "") {
+            error.textContent = "First name is required";
+            return false;
+        }
+
+        // Regex check first
+        if (!pattern.test(firstname)) {
+            error.textContent = "Name should not contain numbers or special characters";
+            return false;
+        }
+
+    if (firstname.length < 3 || firstname.length > 20) {
+        error.textContent = "Name must be between 3 and 20 characters";
+        return false;
+    }
+
+
+    error.textContent = "";
+    return true;
 }
 
-}
 
 
 
@@ -45,11 +61,22 @@ error.textContent=" "
         let lastname = document.getElementById("lastName").value.trim();
         let error = document.getElementById("lastnameError");
 
+        const pattern = /^[A-Za-z\s-]+$/;
+
+        if(!pattern.test(lastname)){
+        error.textContent = "Name should not contain numbers or special characters";
+        return false;
+
+        }
+
         if (lastname.length < 0 || lastname.length > 20) {
             error.textContent = "Last name must be between 3 and 20 characters";
-        } else {
-            error.textContent = "";
+            return false;
         }
+
+        //if valid
+        error.textContent ="";
+        return true;
     }
 //
 //function CheckLastName(){
@@ -69,10 +96,10 @@ error.textContent=" "
   function validatePhone() {
         let phone = document.getElementById("phone").value.trim();
         let error = document.getElementById("phoneError");
-        let regex = /^[0-9]{10}$/;
+        let regex = /^[6-9][0-9]{9}$/;
 
         if (!regex.test(phone)) {
-            error.textContent = "Phone number must be exactly 10 digits";
+            error.textContent = "Phone number must start from 6-9  digits and exactly 10 digits";
         } else {
             error.textContent = "";
         }
@@ -98,8 +125,8 @@ error.textContent=" "
             let exp = document.getElementById("experience").value;
             let error = document.getElementById("experienceError");
 
-            if (exp === "" || exp < 0 || exp > 50) {
-                error.textContent = "Experience must be between 0 and 50 years";
+            if (exp === "" || exp < 0 || exp > 30) {
+                error.textContent = "Experience must be between 0 and 30 years";
             } else {
                 error.textContent = "";
             }
@@ -118,14 +145,16 @@ error.textContent=" "
         }
 
        function validateSpecialization() {
-           let specialization = document.getElementById("specialization").value.trim();
+           let specialization = document.getElementById("specialization").value;
            let error = document.getElementById("specializationError");
 
-           if (specialization === "" || specialization.length < 3 || specialization.length > 50) {
-               error.textContent = "Please select or enter a valid specialization (3–50 characters)";
-           } else {
-               error.textContent = "";
+           if (specialization === "") {
+               error.textContent = "Please select a specialization";
+               return false;
            }
+
+           error.textContent = "";
+           return true;
        }
 
        function validateGender() {

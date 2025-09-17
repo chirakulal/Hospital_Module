@@ -1,11 +1,13 @@
 package com.xworkz.module.dto;
 
+import com.xworkz.module.constant.Specialization;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.*;
 import java.sql.Time;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -31,7 +33,7 @@ public class DoctorDTO {
     private long phone;
 
     @NotNull(message = "Specialization should not be null")
-    private String specialization;
+    private Specialization specialization;
 
 
     @NotNull(message = "Experience should not be null")
@@ -47,6 +49,9 @@ public class DoctorDTO {
 
     @NotNull(message = "Please select the gender")
     private String gender;
+
+    @NotNull(message = "Please select the degree")
+    private List<String> degree;
 
 
 

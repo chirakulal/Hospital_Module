@@ -1,6 +1,7 @@
 package com.xworkz.module.controller;
 
 
+import com.xworkz.module.constant.Specialization;
 import com.xworkz.module.dto.DoctorDTO;
 import com.xworkz.module.dto.HospitalDTO;
 import com.xworkz.module.dto.TimeSlotDTO;
@@ -146,6 +147,7 @@ public class HospitalController {
 
     @GetMapping("doctor")
     public ModelAndView DoctorPage(ModelAndView modelAndView,HttpSession httpSession){
+        modelAndView.addObject("specializations", Specialization.values());
         modelAndView.setViewName("DoctorDetails");
         return modelAndView;
     }
@@ -158,7 +160,7 @@ public class HospitalController {
     }
 
     @PostMapping("saveDoctor")
-    public ModelAndView SaveDoctor(@RequestParam("images") MultipartFile multipartFile, ModelAndView modelAndView, BindingResult bindingResult, @Valid DoctorDTO doctorDTO ) throws IOException {
+    public ModelAndView SaveDoctor(@RequestParam("images") MultipartFile multipartFile, ModelAndView modelAndView,  @Valid DoctorDTO doctorDTO,BindingResult bindingResult ) throws IOException {
         // 1. Check for validation errors from form data.
         if (bindingResult.hasErrors()) {
             for (ObjectError objectError : bindingResult.getAllErrors()) {
@@ -172,7 +174,7 @@ public class HospitalController {
 
         String originalExtension = FilenameUtils.getExtension(multipartFile.getOriginalFilename());
         String fileName = doctorDTO.getFirstName() + "_" + System.currentTimeMillis() + "." + originalExtension;
-        Path uploadPath = Paths.get("D:\\chiraimage\\" + fileName);
+        Path uploadPath = Paths.get("D:\\chiraimage\\HospitalProject\\DoctorProfile" + fileName);
         Files.write(uploadPath, multipartFile.getBytes());
         doctorDTO.setImage(fileName);
         log.info("Profile picture uploaded: {}", fileName);
@@ -207,24 +209,30 @@ public class HospitalController {
 
     @GetMapping("addslot")
     public ModelAndView addSlot(ModelAndView modelAndView,HttpSession httpSession){
+        modelAndView.addObject("specializations", Specialization.values());
         modelAndView.setViewName("AddSlot");
         return modelAndView;
     }
 
-    @GetMapping("/schedule")
+    @GetMapping("schedule")
   public ModelAndView SlotDetails(ModelAndView modelAndView){
         List<String> doctorNames =hospitalService.getAllNames();
 
-        List<LocalTime> timeList = hospitalService.getTime();
+        List<String> timeList = hospitalService.getTime();
 
+        log.info("{}",doctorNames);
+        log.info("{}",timeList);
 
         modelAndView.addObject("doctorNames", doctorNames);
         modelAndView.addObject("timeList", timeList);
+        modelAndView.addObject("scheduleClicked", true); // flag to enable 2nd form
 
-
-        modelAndView.setViewName("AddSlot"); // your JSP
+        modelAndView.setViewName("AddSlot");
         return modelAndView;
+
   }
+
+
 
 
 }

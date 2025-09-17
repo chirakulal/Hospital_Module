@@ -240,7 +240,7 @@ public class HospitalRepoImpl implements HospitalRepo{
             entityManager =entityManagerFactory.createEntityManager();
             entityTransaction=entityManager.getTransaction();
             entityTransaction.begin();
-            Query query =entityManager.createNamedQuery("getAllName");
+            Query query =entityManager.createNamedQuery("DoctorEntity.getAllName");
            list = query.getResultList();
 
             return list;
@@ -256,18 +256,17 @@ public class HospitalRepoImpl implements HospitalRepo{
     }
 
     @Override
-    public List<LocalTime> getTime() {
+    public List<String> getTime() {
         EntityManager entityManager =null;
         EntityTransaction entityTransaction =null;
-        List<LocalTime> list =null ;
+        List<String> list =null ;
 
         try{
             entityManager =entityManagerFactory.createEntityManager();
             entityTransaction=entityManager.getTransaction();
             entityTransaction.begin();
-            Query query =entityManager.createNamedQuery("getTime");
-            list = query.getResultList();
-
+            Query query =entityManager.createNamedQuery("TimeEntity.getTime");
+           log.info("{}",list);
             return list;
         }catch (Exception e){
             if(entityTransaction !=null && entityTransaction.isActive()){

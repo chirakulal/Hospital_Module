@@ -1,11 +1,14 @@
 package com.xworkz.module.entity;
 
+import com.xworkz.module.constant.Specialization;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.sql.Time;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "doctor_details")
@@ -34,8 +37,9 @@ public class DoctorEntity {
     @Column(name = "phone_number")
     private long phone;
 
+    @Enumerated(EnumType.STRING) // Store as String in DB
     @Column(name = "specialization")
-    private String specialization;
+    private Specialization specialization;
 
     @Column(name = "experience")
     private int experience;
@@ -43,11 +47,17 @@ public class DoctorEntity {
     @Column(name = "address")
     private String address;
 
-    @Column(name = "imagepath")
+    @Column(name = "image")
     private String image;
 
     @Column(name = "gender")
     private String gender;
+
+    @ElementCollection
+    @CollectionTable(name = "doctor_degrees", joinColumns = @JoinColumn(name = "doctor_id"))
+    @Column(name = "degree")
+    private List<String> degree = new ArrayList<>();
+
 
 
 

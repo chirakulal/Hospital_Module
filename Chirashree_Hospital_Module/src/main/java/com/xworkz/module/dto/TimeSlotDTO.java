@@ -17,11 +17,11 @@ import java.time.LocalTime;
 public class TimeSlotDTO {
 
     @NotNull(message = "Start time is required")
-    @DateTimeFormat(pattern = "HH:mm")
-    private LocalTime startTime;
+
+    private String startTime;
 
     @NotNull(message = "End time is required")
-    @DateTimeFormat(pattern = "HH:mm")
-    private LocalTime  endTime;
+
+    private String  endTime;
 
 }

@@ -20,8 +20,8 @@ public class ValidationRestController {
         log.info(email);
         int count = hospitalService.emailCount(email);
         log.info(String.valueOf(count));
-        if(count==0) return "";
-        else return "Email already exist";
+        if(count==1) return "";
+        else return "Email does not exist";
 
     }
 
@@ -30,8 +30,8 @@ public class ValidationRestController {
         log.info(lastName);
         int count = hospitalService.countLastName(lastName);
         log.info(String.valueOf(count));
-        if(count==0) return "";
-        else return "Email already exist";
+        if(count==1) return "";
+        else return "Email does not exist";
 
     }
 

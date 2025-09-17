@@ -30,5 +30,5 @@ public interface HospitalService {
 
     List<String> getAllNames();
 
-    List<LocalTime> getTime();
+    List<String> getTime();
 }

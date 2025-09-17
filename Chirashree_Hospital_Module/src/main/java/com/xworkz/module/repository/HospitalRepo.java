@@ -29,7 +29,7 @@ public interface HospitalRepo {
 
      List<String> getAllNames();
 
-     List<LocalTime> getTime();
+     List<String> getTime();
 
 
 }
