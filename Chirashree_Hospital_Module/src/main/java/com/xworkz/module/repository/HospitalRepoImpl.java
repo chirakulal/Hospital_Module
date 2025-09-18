@@ -1,5 +1,6 @@
 package com.xworkz.module.repository;
 
+import com.xworkz.module.constant.Specialization;
 import com.xworkz.module.entity.DoctorEntity;
 import com.xworkz.module.entity.HospitalEntity;
 import com.xworkz.module.entity.TimeEntity;
@@ -178,7 +179,7 @@ public class HospitalRepoImpl implements HospitalRepo{
     }
 
     @Override
-    public Long countPhoneNumber(String phone) {
+    public Long countPhoneNumber(long phone) {
         EntityManager entityManager=null;
         EntityTransaction entityTransaction = null;
         long count=0;
@@ -187,7 +188,7 @@ public class HospitalRepoImpl implements HospitalRepo{
             entityTransaction = entityManager.getTransaction();
 
             entityTransaction.begin();
-            Query query = entityManager.createNamedQuery("countLastname");
+            Query query = entityManager.createNamedQuery("countPhoneNumber");
             query.setParameter("phone", phone);
             count = (long) query.getSingleResult();
             entityTransaction.commit();
@@ -231,7 +232,7 @@ public class HospitalRepoImpl implements HospitalRepo{
     }
 
     @Override
-    public List<String> getAllNames() {
+    public List<String> getAllNames(Specialization specialization) {
         EntityManager entityManager =null;
         EntityTransaction entityTransaction =null;
         List<String> list = null;
@@ -240,7 +241,8 @@ public class HospitalRepoImpl implements HospitalRepo{
             entityManager =entityManagerFactory.createEntityManager();
             entityTransaction=entityManager.getTransaction();
             entityTransaction.begin();
-            Query query =entityManager.createNamedQuery("DoctorEntity.getAllName");
+            Query query =entityManager.createNamedQuery("DoctorEntity.getNamesBySpecialization");
+            query.setParameter("specialization",specialization);
            list = query.getResultList();
 
             return list;
@@ -266,6 +268,8 @@ public class HospitalRepoImpl implements HospitalRepo{
             entityTransaction=entityManager.getTransaction();
             entityTransaction.begin();
             Query query =entityManager.createNamedQuery("TimeEntity.getTime");
+
+           list =  query.getResultList();
            log.info("{}",list);
             return list;
         }catch (Exception e){
@@ -279,5 +283,64 @@ public class HospitalRepoImpl implements HospitalRepo{
         return list;
     }
 
+    @Override
+    public boolean assignSlotToDoctor(String doctorName, String timeSlot) {
+        EntityManager entityManager = null;
+        EntityTransaction entityTransaction = null;
+        boolean update = false;
 
+        try{
+            entityManager = entityManagerFactory.createEntityManager();
+            entityTransaction = entityManager.getTransaction();
+
+            entityTransaction.begin();
+           Query query = entityManager.createNamedQuery("DoctorEntity.updateSlotByName");
+            query.setParameter("doctorName",doctorName);
+            query.setParameter("timeSlot",timeSlot);
+            int rowsUpdated = query.executeUpdate();
+            log.info("Rows updated: {}", rowsUpdated);
+
+            entityTransaction.commit();
+            update = rowsUpdated>0;
+
+
+        }catch (Exception e){
+            if(entityTransaction!=null && entityTransaction.isActive()){
+                entityTransaction.rollback();
+            }
+        }finally {
+            entityManager.close();
+        }
+
+
+        return update;
+    }
+
+    @Override
+    public Long countDoctorEmail(String email) {
+        EntityManager entityManager=null;
+        EntityTransaction entityTransaction = null;
+        long count=0;
+        try {
+            entityManager = entityManagerFactory.createEntityManager();
+            entityTransaction = entityManager.getTransaction();
+
+            entityTransaction.begin();
+            Query query = entityManager.createNamedQuery("DoctorEntity.getByEmail");
+            query.setParameter("email", email);
+            count = (long) query.getSingleResult();
+            log.info("{}",count);
+            entityTransaction.commit();
+            return count;
+        }catch (Exception e){
+            if(entityTransaction!=null && entityTransaction.isActive()){
+                entityTransaction.rollback();
+            }
+            e.printStackTrace();
+        }finally {
+            entityManager.close();
+        }
+
+        return count;
+    }
 }

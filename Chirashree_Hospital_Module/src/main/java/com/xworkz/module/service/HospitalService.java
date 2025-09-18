@@ -1,5 +1,6 @@
 package com.xworkz.module.service;
 
+import com.xworkz.module.constant.Specialization;
 import com.xworkz.module.dto.DoctorDTO;
 import com.xworkz.module.dto.TimeSlotDTO;
 import com.xworkz.module.entity.DoctorEntity;
@@ -24,11 +25,15 @@ public interface HospitalService {
 
     int countLastName(String lastName);
 
-    int countPhoneNumber(String phone);
+    int countPhoneNumber(long phone);
 
     boolean saveTimeSlot(TimeSlotDTO timeSlotDTO);
 
-    List<String> getAllNames();
+    List<String> getAllNames(Specialization specialization);
 
     List<String> getTime();
+
+    boolean assignSlotToDoctor(String doctorName, String timeSlot);
+
+    int countDoctorEmail(String email);
 }

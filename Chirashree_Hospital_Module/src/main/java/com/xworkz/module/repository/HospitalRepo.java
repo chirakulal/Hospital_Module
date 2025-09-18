@@ -1,5 +1,6 @@
 package com.xworkz.module.repository;
 
+import com.xworkz.module.constant.Specialization;
 import com.xworkz.module.entity.DoctorEntity;
 import com.xworkz.module.entity.HospitalEntity;
 import com.xworkz.module.entity.TimeEntity;
@@ -23,13 +24,17 @@ public interface HospitalRepo {
 
     Long countLastName(String lastName);
 
-     Long countPhoneNumber(String phone);
+     Long countPhoneNumber(long phone);
 
      boolean saveTimeSlots(TimeEntity timeEntity);
 
-     List<String> getAllNames();
+     List<String> getAllNames(Specialization specialization);
 
      List<String> getTime();
+
+     boolean assignSlotToDoctor(String doctorName, String timeSlot);
+
+    Long countDoctorEmail(String email);
 
 
 }

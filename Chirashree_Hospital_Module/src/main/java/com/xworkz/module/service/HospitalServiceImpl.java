@@ -1,5 +1,6 @@
 package com.xworkz.module.service;
 
+import com.xworkz.module.constant.Specialization;
 import com.xworkz.module.dto.DoctorDTO;
 import com.xworkz.module.dto.HospitalDTO;
 import com.xworkz.module.dto.TimeSlotDTO;
@@ -177,35 +178,37 @@ public class HospitalServiceImpl implements HospitalService {
     }
 
     @Override
-    public int countPhoneNumber(String phone) {
+    public int countPhoneNumber(long phone) {
         return Math.toIntExact(hospitalRepo.countPhoneNumber(phone));
     }
 
     @Override
     public boolean saveTimeSlot(TimeSlotDTO timeSlotDTO) {
-        log.info(timeSlotDTO.getStartTime());
-        log.info(timeSlotDTO.getEndTime());
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mma");
-       LocalTime start = LocalTime.parse(timeSlotDTO.getStartTime().toUpperCase(),formatter);
-       LocalTime end = LocalTime.parse(timeSlotDTO.getEndTime().toUpperCase(),formatter);
-        TimeEntity time = new TimeEntity();
-
-        time.setStartTime(start);
-        time.setEndTime(end);
-
-
+       TimeEntity time = new TimeEntity();
+       time.setStartTime(timeSlotDTO.getStartTime());
+       time.setEndTime(timeSlotDTO.getEndTime());
 
         return hospitalRepo.saveTimeSlots(time);
     }
 
     @Override
-    public List<String> getAllNames() {
-        return hospitalRepo.getAllNames();
+    public List<String> getAllNames(Specialization specialization) {
+        return hospitalRepo.getAllNames(specialization);
     }
 
     @Override
     public List<String> getTime() {
         return hospitalRepo.getTime();
+    }
+
+    @Override
+    public boolean assignSlotToDoctor(String doctorName, String timeSlot) {
+        return hospitalRepo.assignSlotToDoctor(doctorName,timeSlot);
+    }
+
+    @Override
+    public int countDoctorEmail(String email) {
+        return Math.toIntExact(hospitalRepo.countDoctorEmail(email));
     }
 }

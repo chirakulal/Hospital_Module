@@ -17,10 +17,12 @@ public class DoctorDTO {
 
     @NotNull(message = "Name should not be empty")
     @Size(min=3,max=20,message = "name should contain between 3-20 character")
+    @Pattern(regexp = "^[A-Z][A-Za-z\\s-]*$" ,message = "Name should start from capital and no digits or special character allowed")
     private String firstName;
 
     @NotNull(message = "Name should not be empty")
     @Size(min=1,max=20,message = "name should contain between 3-20 character")
+    @Pattern(regexp = "^[A-Z][A-Za-z\\s-]*$" ,message = "Name should start from capital and no digits or special character allowed")
     private String lastName;
 
     @NotNull(message = "Email should not be empty")
@@ -52,6 +54,8 @@ public class DoctorDTO {
 
     @NotNull(message = "Please select the degree")
     private List<String> degree;
+
+    private String timeSlot;
 
 
 

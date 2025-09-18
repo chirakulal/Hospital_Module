@@ -15,9 +15,12 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@NamedQuery(name = "DoctorEntity.getAllName",query ="Select concat(d.firstName,' ',d.lastName) from DoctorEntity d ")
+@NamedQuery(name = "DoctorEntity.getNamesBySpecialization",query ="Select concat(d.firstName,' ',d.lastName) from DoctorEntity d where d.specialization =:specialization and d.timeSlot is null")
 @NamedQuery(name = "countLastname",query = "Select count(e.lastName) from DoctorEntity e where e.lastName =:lastName")
 @NamedQuery(name = "countPhoneNumber",query = "Select count(e.phone) from  DoctorEntity e where e.phone =:phone")
+@NamedQuery(name = "DoctorEntity.getByEmail", query = "select count(e.email)  from DoctorEntity e where e.email=:email")
+@NamedQuery(name = "DoctorEntity.updateSlotByName", query = "update DoctorEntity d SET d.timeSlot = :timeSlot where concat(d.firstName, ' ', d.lastName) = :doctorName"
+)
 public class DoctorEntity {
 
     @Id
@@ -57,6 +60,9 @@ public class DoctorEntity {
     @CollectionTable(name = "doctor_degrees", joinColumns = @JoinColumn(name = "doctor_id"))
     @Column(name = "degree")
     private List<String> degree = new ArrayList<>();
+
+    @Column(name = "timeslot")
+    private String timeSlot;
 
 
 

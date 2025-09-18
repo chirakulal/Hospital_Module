@@ -11,40 +11,43 @@ function validateEmail(){
     }
 }
 
-function checkEmail(){
+
+function checkDoctorEmail(){
 let email = document.getElementById("email").value;
 let emailError = document.getElementById("emailError");
 
 const xhttp = new XMLHttpRequest();
 
-xhttp.open("GET","http://localhost:8080/Chirashree_Hospital_Module/checkEmail/"+email);
+xhttp.open("GET","http://localhost:8080/Chirashree_Hospital_Module/checkDoctorEmail/"+email);
 xhttp.send();
 
 xhttp.onload=function(){
 emailError.innerHTML=this.responseText;
 }
 
+
 }
 function validateFirstName() {
-    let firstname = document.getElementById("firstName").value.trim();
+    let firstname = document.getElementById("firstName");
     let error = document.getElementById("firstnameError");
+     const pattern = /^[A-Z][A-Za-z\s-]*$/;
 
-    const pattern = /^[A-Za-z\s-]+$/;
+     firstname.value = firstname.value.replace(/[^A-Za-z\s-]/g, '');
 
 
     // Empty check
-        if (firstname === "") {
+        if ( firstname.value === "") {
             error.textContent = "First name is required";
             return false;
         }
 
         // Regex check first
-        if (!pattern.test(firstname)) {
-            error.textContent = "Name should not contain numbers or special characters";
+        if (!pattern.test( firstname.value)) {
+            error.textContent = "Name should start with Capital letter and not contain numbers or special characters";
             return false;
         }
 
-    if (firstname.length < 3 || firstname.length > 20) {
+    if ( firstname.value.length < 3 ||  firstname.value.length > 20) {
         error.textContent = "Name must be between 3 and 20 characters";
         return false;
     }
@@ -58,18 +61,20 @@ function validateFirstName() {
 
 
  function validateLastName() {
-        let lastname = document.getElementById("lastName").value.trim();
+        let lastname = document.getElementById("lastName");
         let error = document.getElementById("lastnameError");
 
-        const pattern = /^[A-Za-z\s-]+$/;
+        const pattern = /^[A-Za-z\s-]*$/;
 
-        if(!pattern.test(lastname)){
+            lastname.value = lastname.value.replace(/[^A-Za-z\s-]/g, '');
+
+        if(!pattern.test(lastname.value)){
         error.textContent = "Name should not contain numbers or special characters";
         return false;
 
         }
 
-        if (lastname.length < 0 || lastname.length > 20) {
+        if (lastname.value.length < 0 || lastname.value.length > 20) {
             error.textContent = "Last name must be between 3 and 20 characters";
             return false;
         }
@@ -78,7 +83,7 @@ function validateFirstName() {
         error.textContent ="";
         return true;
     }
-//
+
 //function CheckLastName(){
 //let lastname = document.getElementById("lastName").value.trim();
 //let error = document.getElementById("lastnameError");
@@ -94,31 +99,37 @@ function validateFirstName() {
 //}
 
   function validatePhone() {
-        let phone = document.getElementById("phone").value.trim();
-        let error = document.getElementById("phoneError");
-        let regex = /^[6-9][0-9]{9}$/;
+      let phone = document.getElementById("phone");
+      let error = document.getElementById("phoneError");
+      let regex = /^[6-9][0-9]{9}$/;  // starts with 6–9 and has total 10 digits
 
-        if (!regex.test(phone)) {
-            error.textContent = "Phone number must start from 6-9  digits and exactly 10 digits";
-        } else {
-            error.textContent = "";
-        }
+      // Remove all non-digit characters (if user types spaces, +91, etc.)
+      phone.value = phone.value.replace(/\D/g, '');
+
+      if (!regex.test(phone.value)) {
+          error.textContent = "Phone number must start with 6-9 and be exactly 10 digits";
+          return false;
+      } else {
+          error.textContent = "";
+          return true;
+      }
+  }
+
+
+
+    function CheckPhoneNumber(){
+    let phoneNumber = document.getElementById("phone").value;
+    let error = document.getElementById("phoneError");
+
+    const xhttp = new XMLHttpRequest();
+
+    xhttp.open("GET","http://localhost:8080/Chirashree_Hospital_Module/CheckPhoneNumber/"+phoneNumber);
+    xhttp.send();
+
+    xhttp.onload = function(){
+    error.innerHTML = this.responseText;
     }
-
-
-//    function CheckPhoneNumber(){
-//    let phoneNumber = document.getElementById("phone").value;
-//    let error = document.getElementById("phoneError");
-//
-//    const xhttp = new XMLHttpRequest();
-//
-//    xhttp.open("GET","http://localhost:8080/Chirashree_Hospital_Module/CheckPhoneNumber"+phoneNumber);
-//    xhttp.send();
-//
-//    xhttp.onload = function(){
-//    error.innerHTML = this.responseText;
-//    }
-//    }
+    }
 
 
       function validateExperience() {

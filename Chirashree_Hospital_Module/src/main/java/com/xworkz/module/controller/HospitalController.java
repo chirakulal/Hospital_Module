@@ -163,9 +163,6 @@ public class HospitalController {
     public ModelAndView SaveDoctor(@RequestParam("images") MultipartFile multipartFile, ModelAndView modelAndView,  @Valid DoctorDTO doctorDTO,BindingResult bindingResult ) throws IOException {
         // 1. Check for validation errors from form data.
         if (bindingResult.hasErrors()) {
-            for (ObjectError objectError : bindingResult.getAllErrors()) {
-                log.info("Validation error: {}", objectError.getDefaultMessage());
-            }
             modelAndView.addObject("errors", bindingResult.getAllErrors());
             modelAndView.addObject("dto", doctorDTO);
             modelAndView.setViewName("DoctorDetails");
@@ -183,6 +180,12 @@ public class HospitalController {
         boolean result =   hospitalService.saveData(doctorDTO);
           if(result){
               modelAndView.addObject("success", "Registered Successfully");
+              modelAndView.addObject("specializations", Specialization.values());
+              modelAndView.setViewName("DoctorDetails");
+          }else{
+              modelAndView.addObject("error","Registration is Unsuccessfully");
+              modelAndView.addObject("specializations", Specialization.values());
+              modelAndView.addObject("dto",doctorDTO);
               modelAndView.setViewName("DoctorDetails");
           }
 
@@ -199,9 +202,12 @@ public class HospitalController {
 
         boolean result =   hospitalService.saveTimeSlot(timeSlotDTO);
         if(result){
-            modelAndView.addObject("success", "Registered Successfully");
+            modelAndView.addObject("success", "TimeSlot is saved");
             modelAndView.setViewName("Slot");
-            return modelAndView;
+
+        }else{
+            modelAndView.addObject("success", "TimeSlot is not Saved");
+            modelAndView.setViewName("Slot");
         }
 
         return modelAndView;
@@ -215,22 +221,48 @@ public class HospitalController {
     }
 
     @GetMapping("schedule")
-  public ModelAndView SlotDetails(ModelAndView modelAndView){
-        List<String> doctorNames =hospitalService.getAllNames();
+  public ModelAndView SlotDetails(ModelAndView modelAndView,@RequestParam Specialization specialization){
+        List<String> doctorNames =hospitalService.getAllNames(specialization);
 
         List<String> timeList = hospitalService.getTime();
 
         log.info("{}",doctorNames);
         log.info("{}",timeList);
+        modelAndView.addObject("specializations", Specialization.values());
+        modelAndView.addObject("selectedSpec", specialization);
 
-        modelAndView.addObject("doctorNames", doctorNames);
-        modelAndView.addObject("timeList", timeList);
-        modelAndView.addObject("scheduleClicked", true); // flag to enable 2nd form
+        if (doctorNames != null && !doctorNames.isEmpty()) {
+            modelAndView.addObject("doctorNames", doctorNames);
+            modelAndView.addObject("timeList", timeList);
+            modelAndView.addObject("scheduleClicked", true);
+        } else {
+            modelAndView.addObject("error", "No doctors available for " + specialization);
+            modelAndView.addObject("scheduleClicked", false);
+        }
 
         modelAndView.setViewName("AddSlot");
         return modelAndView;
+    }
 
-  }
+
+    @PostMapping("saveSlot")
+    public ModelAndView saveSlot(@RequestParam String doctorName,
+                                 @RequestParam String timeSlot,
+                                 ModelAndView modelAndView) {
+
+        boolean updated = hospitalService.assignSlotToDoctor(doctorName, timeSlot);
+       log.info("{}",updated);
+        if (updated) {
+            modelAndView.addObject("success", "Time slot assigned to " + doctorName + " successfully.");
+        } else {
+            modelAndView.addObject("error", "Failed to assign time slot. Please try again.");
+        }
+
+        // reload page with updated specializations
+        modelAndView.addObject("specializations", Specialization.values());
+        modelAndView.setViewName("AddSlot");
+        return modelAndView;
+    }
 
 
 
