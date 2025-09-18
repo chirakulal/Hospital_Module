@@ -1,7 +1,7 @@
 # Hospital_Module
 
 # Hospital Management System
-This is a Spring Boot application for managing a hospital's administrative tasks, focusing on doctor and time slot management. The application provides an admin-facing dashboard to register new doctors, define their specializations and personal details, create available time slots, and assign these slots to specific doctors. It features a secure login system for the administrator using an OTP (One-Time Password) sent to a registered email.
+This is a  application for managing a hospital's administrative tasks, focusing on doctor and time slot management. The application provides an admin-facing dashboard to register new doctors, define their specializations and personal details, create available time slots, and assign these slots to specific doctors. It features a secure login system for the administrator using an OTP (One-Time Password) sent to a registered email.
 
 # Features
 Secure Admin Login: Admins can log in using their email, which triggers a one-time password (OTP) sent to that email address. The OTP is valid for 2 minutes.
