@@ -84,7 +84,7 @@
             <div class="col-md-6">
                 <label for="phone" class="form-label fw-semibold">Phone Number</label>
                 <input type="number" class="form-control shadow-sm" id="phone" name="phone"
-                       oninput="validatePhone()" onchange="CheckPhoneNumber()" value="${dto.phone} placeholder="Enter phone number" required>
+                       oninput="validatePhone()" onchange="CheckPhoneNumber()" value="${dto.phone}" placeholder="Enter phone number" required>
                 <div id="phoneError" class="form-text text-danger"></div>
             </div>
 
@@ -94,10 +94,16 @@
                 <select class="form-select shadow-sm" id="specialization" name="specialization" required>
                     <option value="">Choose...</option>
                     <c:forEach var="spec" items="${specializations}">
-                        <option value="${spec}" ${doctor.specialization == spec ? 'selected' : ''}>
-                        ${spec.displayName}
-                        </option>
+                        <c:choose>
+                            <c:when test="${doctor.specialization eq spec}">
+                                <option value="${spec}" selected="selected">${spec.displayName}</option>
+                            </c:when>
+                            <c:otherwise>
+                                <option value="${spec}">${spec.displayName}</option>
+                            </c:otherwise>
+                        </c:choose>
                     </c:forEach>
+
                 </select>
             </div>
 

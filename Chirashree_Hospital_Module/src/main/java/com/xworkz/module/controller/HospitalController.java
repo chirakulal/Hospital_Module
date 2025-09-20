@@ -52,7 +52,7 @@ public class HospitalController {
     }
     @PostMapping("sendOtp")
     public ModelAndView sendOtp(ModelAndView modelAndView,
-                                @RequestParam String email,HttpSession httpSession) {
+                                @RequestParam String email) {
 
 
         try {
@@ -159,59 +159,8 @@ public class HospitalController {
         return modelAndView;
     }
 
-    @PostMapping("saveDoctor")
-    public ModelAndView SaveDoctor(@RequestParam("images") MultipartFile multipartFile, ModelAndView modelAndView,  @Valid DoctorDTO doctorDTO,BindingResult bindingResult ) throws IOException {
-        // 1. Check for validation errors from form data.
-        if (bindingResult.hasErrors()) {
-            modelAndView.addObject("errors", bindingResult.getAllErrors());
-            modelAndView.addObject("dto", doctorDTO);
-            modelAndView.setViewName("DoctorDetails");
-            return modelAndView;
-        }
-
-        String originalExtension = FilenameUtils.getExtension(multipartFile.getOriginalFilename());
-        String fileName = doctorDTO.getFirstName() + "_" + System.currentTimeMillis() + "." + originalExtension;
-        Path uploadPath = Paths.get("D:\\chiraimage\\HospitalProject\\DoctorProfile" + fileName);
-        Files.write(uploadPath, multipartFile.getBytes());
-        doctorDTO.setImage(fileName);
-        log.info("Profile picture uploaded: {}", fileName);
 
 
-        boolean result =   hospitalService.saveData(doctorDTO);
-          if(result){
-              modelAndView.addObject("success", "Registered Successfully");
-              modelAndView.addObject("specializations", Specialization.values());
-              modelAndView.setViewName("DoctorDetails");
-          }else{
-              modelAndView.addObject("error","Registration is Unsuccessfully");
-              modelAndView.addObject("specializations", Specialization.values());
-              modelAndView.addObject("dto",doctorDTO);
-              modelAndView.setViewName("DoctorDetails");
-          }
-
-        return modelAndView;
-    }
-    @GetMapping("slot")
-    public ModelAndView SlotTime(ModelAndView modelAndView,HttpSession httpSession){
-        modelAndView.setViewName("Slot");
-        return modelAndView;
-    }
-
-    @PostMapping("saveTime")
-    public ModelAndView saveTimeSlots(ModelAndView modelAndView, TimeSlotDTO timeSlotDTO){
-
-        boolean result =   hospitalService.saveTimeSlot(timeSlotDTO);
-        if(result){
-            modelAndView.addObject("success", "TimeSlot is saved");
-            modelAndView.setViewName("Slot");
-
-        }else{
-            modelAndView.addObject("success", "TimeSlot is not Saved");
-            modelAndView.setViewName("Slot");
-        }
-
-        return modelAndView;
-    }
 
     @GetMapping("addslot")
     public ModelAndView addSlot(ModelAndView modelAndView,HttpSession httpSession){
@@ -220,49 +169,7 @@ public class HospitalController {
         return modelAndView;
     }
 
-    @GetMapping("schedule")
-  public ModelAndView SlotDetails(ModelAndView modelAndView,@RequestParam Specialization specialization){
-        List<String> doctorNames =hospitalService.getAllNames(specialization);
 
-        List<String> timeList = hospitalService.getTime();
-
-        log.info("{}",doctorNames);
-        log.info("{}",timeList);
-        modelAndView.addObject("specializations", Specialization.values());
-        modelAndView.addObject("selectedSpec", specialization);
-
-        if (doctorNames != null && !doctorNames.isEmpty()) {
-            modelAndView.addObject("doctorNames", doctorNames);
-            modelAndView.addObject("timeList", timeList);
-            modelAndView.addObject("scheduleClicked", true);
-        } else {
-            modelAndView.addObject("error", "No doctors available for " + specialization);
-            modelAndView.addObject("scheduleClicked", false);
-        }
-
-        modelAndView.setViewName("AddSlot");
-        return modelAndView;
-    }
-
-
-    @PostMapping("saveSlot")
-    public ModelAndView saveSlot(@RequestParam String doctorName,
-                                 @RequestParam String timeSlot,
-                                 ModelAndView modelAndView) {
-
-        boolean updated = hospitalService.assignSlotToDoctor(doctorName, timeSlot);
-       log.info("{}",updated);
-        if (updated) {
-            modelAndView.addObject("success", "Time slot assigned to " + doctorName + " successfully.");
-        } else {
-            modelAndView.addObject("error", "Failed to assign time slot. Please try again.");
-        }
-
-        // reload page with updated specializations
-        modelAndView.addObject("specializations", Specialization.values());
-        modelAndView.setViewName("AddSlot");
-        return modelAndView;
-    }
 
 
 

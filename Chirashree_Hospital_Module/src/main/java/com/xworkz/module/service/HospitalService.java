@@ -21,19 +21,14 @@ public interface HospitalService {
 
     int getRemainingCooldownSeconds(String email);
 
-    boolean saveData(DoctorDTO doctorDTO);
+
 
     int countLastName(String lastName);
 
     int countPhoneNumber(long phone);
 
-    boolean saveTimeSlot(TimeSlotDTO timeSlotDTO);
 
-    List<String> getAllNames(Specialization specialization);
 
-    List<String> getTime();
-
-    boolean assignSlotToDoctor(String doctorName, String timeSlot);
 
     int countDoctorEmail(String email);
 }
