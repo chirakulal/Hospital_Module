@@ -14,6 +14,7 @@ import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.sql.DataSource;
+import java.util.Properties;
 
 @Configuration
 @EnableWebMvc
@@ -35,11 +36,19 @@ public class HospitalConfiguration implements WebMvcConfigurer {
         registry.jsp("/",".jsp");
     }
 
+    // Corrected EntityManagerFactoryBean configuration
     @Bean
     public LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean(){
         LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
         factoryBean.setDataSource(dataSource());
         factoryBean.setPackagesToScan("com.xworkz.module.entity");
+
+        Properties jpaProperties = new Properties();
+        jpaProperties.put("hibernate.dialect", "org.hibernate.dialect.MySQL8Dialect");
+        jpaProperties.put("hibernate.hbm2ddl.auto", "update"); // Crucial for schema management
+        jpaProperties.put("hibernate.show_sql", "true");
+
+        factoryBean.setJpaProperties(jpaProperties);
         factoryBean.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
         return factoryBean;
     }
@@ -57,11 +66,14 @@ public class HospitalConfiguration implements WebMvcConfigurer {
 
     @Bean(name = "multipartResolver")
     public CommonsMultipartResolver commonsMultipartResolver() {
-
         CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
-        commonsMultipartResolver.setMaxUploadSize(1048576);
-        commonsMultipartResolver.setMaxInMemorySize(1048576);
-        return commonsMultipartResolver;
 
+        // Set to 5 MB (5 * 1024 * 1024 bytes)
+        commonsMultipartResolver.setMaxUploadSize(5242880);
+
+        // Set to 5 MB (or a suitable value)
+        commonsMultipartResolver.setMaxInMemorySize(5242880);
+
+        return commonsMultipartResolver;
     }
 }

@@ -1,32 +1,15 @@
 package com.xworkz.module.controller;
 
 
-import com.xworkz.module.constant.Specialization;
-import com.xworkz.module.dto.DoctorDTO;
-import com.xworkz.module.dto.HospitalDTO;
-import com.xworkz.module.dto.TimeSlotDTO;
 import com.xworkz.module.service.HospitalService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Repository;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.List;
 
 @Controller
 @ComponentScan(basePackages = "com.xworkz.module")
@@ -52,12 +35,13 @@ public class HospitalController {
     }
     @PostMapping("sendOtp")
     public ModelAndView sendOtp(ModelAndView modelAndView,
-                                @RequestParam String email) {
+                                @RequestParam String email,HttpSession httpSession) {
 
 
         try {
             boolean result = hospitalService.sendOtp(email);
             if (result) {
+                httpSession.setAttribute("loginEmail", email);
                 modelAndView.addObject("success", "OTP sent successfully!");
                 modelAndView.addObject("email",email);
                 modelAndView.addObject("remainingSeconds", 120);
@@ -145,12 +129,7 @@ public class HospitalController {
     }
 
 
-    @GetMapping("doctor")
-    public ModelAndView DoctorPage(ModelAndView modelAndView,HttpSession httpSession){
-        modelAndView.addObject("specializations", Specialization.values());
-        modelAndView.setViewName("DoctorDetails");
-        return modelAndView;
-    }
+
 
     @GetMapping("logout")
     public ModelAndView logout(ModelAndView modelAndView, HttpSession session) {
@@ -164,11 +143,16 @@ public class HospitalController {
 
     @GetMapping("addslot")
     public ModelAndView addSlot(ModelAndView modelAndView,HttpSession httpSession){
-        modelAndView.addObject("specializations", Specialization.values());
+      //  modelAndView.addObject("specializations", Specialization.values());
         modelAndView.setViewName("AddSlot");
         return modelAndView;
     }
 
+    @GetMapping("AddSpecialization")
+    public ModelAndView addSpecialization(ModelAndView modelAndView,HttpSession httpSession){
+        modelAndView.setViewName("AddSpecialization");
+        return modelAndView;
+    }
 
 
 

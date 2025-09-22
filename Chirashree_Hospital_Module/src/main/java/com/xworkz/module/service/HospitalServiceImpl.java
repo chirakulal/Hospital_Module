@@ -1,12 +1,6 @@
 package com.xworkz.module.service;
 
-import com.xworkz.module.constant.Specialization;
-import com.xworkz.module.dto.DoctorDTO;
-import com.xworkz.module.dto.HospitalDTO;
-import com.xworkz.module.dto.TimeSlotDTO;
-import com.xworkz.module.entity.DoctorEntity;
 import com.xworkz.module.entity.HospitalEntity;
-import com.xworkz.module.entity.TimeEntity;
 import com.xworkz.module.repository.HospitalRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +14,6 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Properties;
 import java.util.Random;
 
@@ -28,15 +21,12 @@ import java.util.Random;
 @Service
 public class HospitalServiceImpl implements HospitalService {
 
-    public HospitalServiceImpl(){
+    public HospitalServiceImpl() {
         log.info("Service.........");
     }
 
     @Autowired
-  private   HospitalRepo hospitalRepo;
-
-
-
+    private HospitalRepo hospitalRepo;
 
 
     @Override
@@ -46,7 +36,8 @@ public class HospitalServiceImpl implements HospitalService {
     }
 
 
-   private String generatedOtp ="";
+    private String generatedOtp = "";
+
     @Override
     public boolean sendOtp(String email) {
         try {
@@ -59,9 +50,6 @@ public class HospitalServiceImpl implements HospitalService {
             LocalDateTime otpGeneratedTime = LocalDateTime.now();
 
 
-
-
-
             boolean result = hospitalRepo.updateOTp(email, otpGeneratedTime, generatedOtp);
             if (result) {
                 sendEmailOtp(email, "OTP Sent",
@@ -72,7 +60,7 @@ public class HospitalServiceImpl implements HospitalService {
                 log.error("Failed to save OTP for email: {}", email);
                 return false;
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("Error in sendOtp service", e);
             return false;
         }
@@ -82,21 +70,21 @@ public class HospitalServiceImpl implements HospitalService {
     public boolean checkOtp(String otp, String email) {
 
         HospitalEntity hospitalEntity = hospitalRepo.getEmail(email);
-        if(hospitalEntity ==null || hospitalEntity.getOtp()==null || hospitalEntity.getTime()==null){
+        if (hospitalEntity == null || hospitalEntity.getOtp() == null || hospitalEntity.getTime() == null) {
             return false;
         }
 
-      Long secondsElapsed = Duration.between(hospitalEntity.getTime(),LocalDateTime.now()).getSeconds();
+        Long secondsElapsed = Duration.between(hospitalEntity.getTime(), LocalDateTime.now()).getSeconds();
 
         if (secondsElapsed > 120) {
-            hospitalRepo.updateOTp(email,null,null);
+            hospitalRepo.updateOTp(email, null, null);
             log.warn("OTP for {} has expired.", email);
             return false; // OTP expired
         }
 
-        if(generatedOtp.trim().equals(otp.trim())){
-            hospitalRepo.updateOTp(email,null,null);
-            log.info("OTP verified is successfully for {}",email);
+        if (generatedOtp.trim().equals(otp.trim())) {
+            hospitalRepo.updateOTp(email, null, null);
+            log.info("OTP verified is successfully for {}", email);
             return true;
         }
         return false;
@@ -106,12 +94,12 @@ public class HospitalServiceImpl implements HospitalService {
     @Override
     public int getRemainingCooldownSeconds(String email) {
         HospitalEntity hospitalEntity = hospitalRepo.getEmail(email);
-        if(hospitalEntity ==null || hospitalEntity.getOtp()==null|| hospitalEntity.getTime() == null){
+        if (hospitalEntity == null || hospitalEntity.getOtp() == null || hospitalEntity.getTime() == null) {
             return 0;
         }
 
-        long seconds = Duration.between(hospitalEntity.getTime(),LocalDateTime.now()).getSeconds();
-        return (int) Math.max(0,120-seconds);
+        long seconds = Duration.between(hospitalEntity.getTime(), LocalDateTime.now()).getSeconds();
+        return (int) Math.max(0, 120 - seconds);
 
     }
 
@@ -150,22 +138,20 @@ public class HospitalServiceImpl implements HospitalService {
     }
 
 
-
-
-    @Override
-    public int countLastName(String lastName) {
-        return Math.toIntExact(hospitalRepo.countLastName(lastName));
-    }
-
+//    @Override
+//    public int countLastName(String lastName) {
+//        return Math.toIntExact(hospitalRepo.countLastName(lastName));
+//    }
+//
     @Override
     public int countPhoneNumber(long phone) {
         return Math.toIntExact(hospitalRepo.countPhoneNumber(phone));
     }
-
-
-
-
-
+//
+//
+//
+//
+//
     @Override
     public int countDoctorEmail(String email) {
         return Math.toIntExact(hospitalRepo.countDoctorEmail(email));

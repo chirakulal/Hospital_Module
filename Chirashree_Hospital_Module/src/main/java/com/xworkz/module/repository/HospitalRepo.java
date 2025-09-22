@@ -1,14 +1,9 @@
 package com.xworkz.module.repository;
 
-import com.xworkz.module.constant.Specialization;
-import com.xworkz.module.entity.DoctorEntity;
-import com.xworkz.module.entity.HospitalEntity;
-import com.xworkz.module.entity.TimeEntity;
-import org.springframework.stereotype.Repository;
+import com.xworkz.module.entity.*;
+import jdk.nashorn.internal.runtime.Specialization;
 
-import java.sql.Time;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 
 
@@ -20,21 +15,25 @@ public interface HospitalRepo {
 
     HospitalEntity getEmail(String email);
 
+    boolean saveSpecializationData(SpecializationEntity specializationEntity);
+
+    List<String> getAllSpecializations();
+
     boolean saveData(DoctorEntity doctorEntity);
-
-    Long countLastName(String lastName);
-
+//
+//    Long countLastName(String lastName);
+//
      Long countPhoneNumber(long phone);
-
-     boolean saveTimeSlots(TimeEntity timeEntity);
-
-     List<String> getAllNames(Specialization specialization);
-
-     List<String> getTime();
-
-     boolean assignSlotToDoctor(String doctorName, String timeSlot);
-
-    Long countDoctorEmail(String email);
+//
+   boolean saveTimeSlots(SlotEntity slotEntity);
+//
+//    // List<String> getAllNames(Specialization specialization);
+//
+//     List<String> getTime();
+//
+//     boolean assignSlotToDoctor(String doctorName, String timeSlot);
+//
+   Long countDoctorEmail(String email);
 
 
 }
