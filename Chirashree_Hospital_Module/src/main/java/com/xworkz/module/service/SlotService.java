@@ -1,7 +1,12 @@
 package com.xworkz.module.service;
 
-import com.xworkz.module.dto.TimeSlotDTO;
+import com.xworkz.module.dto.SlotDTO;
+
+import java.util.List;
 
 public interface SlotService {
-    boolean saveTimeSlot(TimeSlotDTO timeSlotDTO);
+
+    List<String> getAllNames();
+
+    boolean saveTimeSlot(SlotDTO slotDTO);
 }

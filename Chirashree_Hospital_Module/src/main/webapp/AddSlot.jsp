@@ -49,11 +49,11 @@
             <form action="schedule" method="get" class="mb-4">
                 <div class="mb-3">
                     <label for="specialization" class="form-label fw-semibold">Select Specialization:</label>
-                    <select class="form-select shadow-sm" id="specialization" name="specialization" required>
+                    <select class="form-select shadow-sm" id="specialization" name="specializationName" required>
                         <option value="">Select...</option>
                         <c:forEach var="spec" items="${specializations}">
                             <option value="${spec}" <c:if test="${spec == selectedSpec}">selected</c:if>>
-                            ${spec.displayName}
+                            ${spec}
                             </option>
                         </c:forEach>
                     </select>

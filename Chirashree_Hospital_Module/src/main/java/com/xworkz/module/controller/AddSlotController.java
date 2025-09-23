@@ -1,7 +1,8 @@
 package com.xworkz.module.controller;
 
-import com.xworkz.module.constant.Specialization;
+import com.xworkz.module.dto.SpecializationDTO;
 import com.xworkz.module.service.AddSlotService;
+import com.xworkz.module.service.SpecializationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,23 +26,26 @@ public class AddSlotController {
     @Autowired
     private AddSlotService addSlotService;
 
-    @GetMapping("schedule")
-    public ModelAndView SlotDetails(ModelAndView modelAndView, @RequestParam Specialization specialization){
-        List<String> doctorNames =addSlotService.getAllNames(specialization);
+    @Autowired
+    private SpecializationService specializationService;
 
-        List<String> timeList = addSlotService.getTime();
+    @GetMapping("schedule")
+    public ModelAndView SlotDetails(ModelAndView modelAndView, @RequestParam String specializationName){
+        List<String> doctorNames =addSlotService.getAllNames(specializationName);
+
+        List<String> timeList = addSlotService.getTime(specializationName);
 
         log.info("{}",doctorNames);
         log.info("{}",timeList);
-        modelAndView.addObject("specializations", Specialization.values());
-        modelAndView.addObject("selectedSpec", specialization);
+        modelAndView.addObject("specializations",specializationService.getAllNames() );
+        modelAndView.addObject("selectedSpec", specializationName);
 
         if (doctorNames != null && !doctorNames.isEmpty()) {
             modelAndView.addObject("doctorNames", doctorNames);
             modelAndView.addObject("timeList", timeList);
             modelAndView.addObject("scheduleClicked", true);
         } else {
-            modelAndView.addObject("error", "No doctors available for " + specialization);
+            modelAndView.addObject("error", "No doctors available for " + specializationName);
             modelAndView.addObject("scheduleClicked", false);
         }
 
@@ -64,7 +68,11 @@ public class AddSlotController {
         }
 
         // reload page with updated specializations
-        modelAndView.addObject("specializations", Specialization.values());
+
+        modelAndView.addObject("specializations", specializationService.getAllNames());
+        modelAndView.addObject("doctorNames", addSlotService.getAllNames(doctorName));
+        modelAndView.addObject("timeList", addSlotService.getTime(timeSlot));
+
         modelAndView.setViewName("AddSlot");
         return modelAndView;
     }

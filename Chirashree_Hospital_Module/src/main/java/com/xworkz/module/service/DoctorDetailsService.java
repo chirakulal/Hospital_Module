@@ -1,13 +1,16 @@
 package com.xworkz.module.service;
 
-import com.xworkz.module.constant.Specialization;
 import com.xworkz.module.dto.DoctorDTO;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface DoctorDetailsService {
 
-    boolean saveData(DoctorDTO doctorDTO);
+
+    List<String> getAllNames();
+
+   boolean saveData(DoctorDTO doctorDTO) throws IOException;
 
 
 }

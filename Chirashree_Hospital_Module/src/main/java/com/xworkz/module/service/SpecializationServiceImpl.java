@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.Collections;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -15,6 +17,7 @@ public class SpecializationServiceImpl implements SpecializationService{
 
     @Autowired
     private HospitalRepo hospitalRepo;
+
 
     @Override
     public boolean saveSpecialization(SpecializationDTO specializationDTO) {
@@ -25,6 +28,17 @@ public class SpecializationServiceImpl implements SpecializationService{
         specializationEntity.setUpdatedBy(specializationDTO.getUpdatedBy());
         specializationEntity.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
         return hospitalRepo.saveSpecializationData(specializationEntity) ; // Return true if saved successfully
+    }
+    @Override
+    public List<String> getAllNames() {
+        List<String> list = hospitalRepo.getAllSpecializations();
+        if (list != null && !list.isEmpty()) {
+            log.info("List is found in service" + list.size());
+            return list;
+        } else {
+            log.info("List is not found in service");
+            return Collections.emptyList(); // Return an empty list instead of null
+        }
     }
 
 }

@@ -2,6 +2,7 @@ package com.xworkz.module.controller;
 
 
 import com.xworkz.module.service.HospitalService;
+import com.xworkz.module.service.SpecializationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
@@ -25,6 +26,9 @@ public class HospitalController {
 
     @Autowired
     private HospitalService hospitalService;
+
+    @Autowired
+    private SpecializationService specializationService;
 
 
     @GetMapping("admin")
@@ -143,7 +147,7 @@ public class HospitalController {
 
     @GetMapping("addslot")
     public ModelAndView addSlot(ModelAndView modelAndView,HttpSession httpSession){
-      //  modelAndView.addObject("specializations", Specialization.values());
+      modelAndView.addObject("specializations",specializationService.getAllNames());
         modelAndView.setViewName("AddSlot");
         return modelAndView;
     }

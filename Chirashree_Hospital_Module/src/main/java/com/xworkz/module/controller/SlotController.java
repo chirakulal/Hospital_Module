@@ -1,6 +1,6 @@
 package com.xworkz.module.controller;
 
-import com.xworkz.module.dto.TimeSlotDTO;
+import com.xworkz.module.dto.SlotDTO;
 import com.xworkz.module.service.SlotService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,20 +26,28 @@ public class SlotController {
 
     @GetMapping("slot")
     public ModelAndView SlotTime(ModelAndView modelAndView, HttpSession httpSession){
+        log.info("Running SlotTime in controller");
+        String userName = (String) httpSession.getAttribute("userName");
+        modelAndView.addObject("userName", userName);
+        modelAndView.addObject("specialization",slotservice.getAllNames());
         modelAndView.setViewName("Slot");
         return modelAndView;
     }
 
     @PostMapping("saveTime")
-    public ModelAndView saveTimeSlots(ModelAndView modelAndView, TimeSlotDTO timeSlotDTO){
-
-        boolean result =   slotservice.saveTimeSlot(timeSlotDTO);
+    public ModelAndView saveTimeSlots(ModelAndView modelAndView, SlotDTO slotDTO,HttpSession httpSession){
+        log.info("Running saveTimeSlots in controller");
+        String email= (String) httpSession.getAttribute("loginEmail");
+        slotDTO.setCreatedBy(email);
+        boolean result =   slotservice.saveTimeSlot(slotDTO);
         if(result){
             modelAndView.addObject("success", "TimeSlot is saved");
+            modelAndView.addObject("specialization",slotservice.getAllNames());
             modelAndView.setViewName("Slot");
 
         }else{
             modelAndView.addObject("success", "TimeSlot is not Saved");
+            modelAndView.addObject("specialization",slotservice.getAllNames());
             modelAndView.setViewName("Slot");
         }
 

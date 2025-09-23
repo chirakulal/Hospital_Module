@@ -1,32 +1,49 @@
 package com.xworkz.module.service;
 
-import com.xworkz.module.dto.TimeSlotDTO;
-import com.xworkz.module.entity.TimeEntity;
+import com.xworkz.module.dto.SlotDTO;
+import com.xworkz.module.entity.SlotEntity;
 import com.xworkz.module.repository.HospitalRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.List;
+
 @Slf4j
 @Service
 public class SlotServiceIMpl implements SlotService {
 
-    public SlotServiceIMpl(){
+    public SlotServiceIMpl() {
         System.out.println("Created SlotServiceIMpl");
     }
 
     @Autowired
     private HospitalRepo hospitalRepo;
 
+    @Override
+    public List<String> getAllNames() {
+        List<String> list = hospitalRepo.getAllSpecializations();
+        if (list != null && !list.isEmpty()) {
+            log.info("List is found in service" + list.size());
+            return list;
+        } else {
+            log.info("List is not found in service");
+            return Collections.emptyList(); // Return an empty list instead of null
+        }
+    }
 
     @Override
-    public boolean saveTimeSlot(TimeSlotDTO timeSlotDTO) {
-
-            TimeEntity time = new TimeEntity();
-            time.setStartTime(timeSlotDTO.getStartTime());
-            time.setEndTime(timeSlotDTO.getEndTime());
-
-            return hospitalRepo.saveTimeSlots(time);
-
+    public boolean saveTimeSlot(SlotDTO slotDTO) {
+        SlotEntity slotEntity = new SlotEntity();
+        slotEntity.setSpecializationName(slotDTO.getSpecializationName());
+        slotEntity.setStartTime(slotDTO.getStartTime());
+        slotEntity.setEndTime(slotDTO.getEndTime());
+        slotEntity.setCreatedBy(slotDTO.getCreatedBy());
+        slotEntity.setCreatedAt(new java.sql.Timestamp(new java.util.Date().getTime()));
+        boolean result = hospitalRepo.saveTimeSlots(slotEntity);
+        log.info("Data saved in entity" + result);
+        return result;
     }
+
 }

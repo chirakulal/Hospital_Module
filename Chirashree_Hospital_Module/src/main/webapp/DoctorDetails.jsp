@@ -23,6 +23,9 @@
                      class="d-inline-block align-text-top me-2">
                 <span class="fw-bold fs-4 text-success font-Courier New">Healing Hands Hospital</span>
             </a>
+            <a href="updateDetails" class="btn btn-outline-success fw-semibold">
+                Update Details
+            </a>
             <a href="dashboard-success" class="btn btn-outline-success fw-semibold">
                 Back to Dashboard
             </a>
@@ -89,23 +92,16 @@
             </div>
 
             <!-- Specialization -->
-            <div class="col-md-6">
-                <label for="specialization" class="form-label fw-semibold">Specialization</label>
-                <select class="form-select shadow-sm" id="specialization" name="specialization" required>
-                    <option value="">Choose...</option>
-                    <c:forEach var="spec" items="${specializations}">
-                        <c:choose>
-                            <c:when test="${doctor.specialization eq spec}">
-                                <option value="${spec}" selected="selected">${spec.displayName}</option>
-                            </c:when>
-                            <c:otherwise>
-                                <option value="${spec}">${spec.displayName}</option>
-                            </c:otherwise>
-                        </c:choose>
-                    </c:forEach>
 
-                </select>
-            </div>
+                <div class="col-md-6">
+                    <label for="specialization" class="form-label fw-semibold">Specialization</label>
+                    <select class="form-select shadow-sm" id="specialization" name="specializationName" required>
+                        <option value="">Choose...</option>
+                        <c:forEach var="spec" items="${specializations}">
+                            <option value="${spec}">${spec}</option>
+                        </c:forEach>
+                    </select>
+                </div>
 
             <!-- Experience -->
             <div class="col-md-6">
