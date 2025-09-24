@@ -51,4 +51,43 @@ public class EmailService {
             e.printStackTrace();
         }
     }
+
+    public void sendDoctorUpdateEmail(String doctorName, String doctorEmail) {
+        final String username = "chirashreelk@gmail.com";
+        final String password = "wvxi xvhj jfcr bgkh"; // Note: Use your App Password
+
+        Properties prop = new Properties();
+        prop.put("mail.smtp.host", "smtp.gmail.com");
+        prop.put("mail.smtp.port", "587");
+        prop.put("mail.smtp.auth", "true");
+        prop.put("mail.smtp.starttls.enable", "true"); // TLS
+
+        Session session = Session.getInstance(prop, new javax.mail.Authenticator() {
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(username, password);
+            }
+        });
+
+        try {
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress("chirashreelk@gmail.com"));
+            message.setRecipients(
+                    Message.RecipientType.TO,
+                    InternetAddress.parse(doctorEmail)
+            );
+            message.setSubject("Profile Update Confirmation for Hospital System");
+            message.setText("Dear Dr. " + doctorName + ",\n\n"
+                    + "This email is to confirm that your profile details in our hospital's system have been successfully updated.\n\n"
+                    + "The changes you requested are now reflected in our records.\n\n"
+                    + "If you did not make these changes, please contact the hospital administration immediately.\n\n"
+                    + "Best regards,\n"
+                    + "The Hospital Administration Team");
+
+            Transport.send(message);
+            System.out.println("Doctor update email sent to: " + doctorEmail);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

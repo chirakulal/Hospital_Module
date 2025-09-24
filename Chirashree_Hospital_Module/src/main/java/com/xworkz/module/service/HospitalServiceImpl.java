@@ -156,4 +156,6 @@ public class HospitalServiceImpl implements HospitalService {
     public int countDoctorEmail(String email) {
         return Math.toIntExact(hospitalRepo.countDoctorEmail(email));
     }
+
+
 }

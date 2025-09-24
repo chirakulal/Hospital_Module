@@ -28,6 +28,11 @@ import java.util.List;
         query = "SELECT  d FROM DoctorEntity d LEFT JOIN FETCH d.profilePicture LEFT JOIN FETCH d.degree where d.email=:email"
 )
 
+@NamedQuery(
+        name = "DoctorEntity.getAllDoctorDetailsById",
+        query = "SELECT  d FROM DoctorEntity d LEFT JOIN FETCH d.profilePicture LEFT JOIN FETCH d.degree where d.id=:id"
+)
+@NamedQuery(name = "DoctorEntity.getTimeSlotByEmail", query = "select d.timeSlot from DoctorEntity d where d.email=:email")
 
 public class DoctorEntity {
 

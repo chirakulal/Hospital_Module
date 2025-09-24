@@ -43,6 +43,9 @@
                         <a class="nav-link fw-semibold text-success" href="addslot">AddSlot</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link fw-semibold text-success" href="PatientRegistration">Patient Registration</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link fw-semibold text-success" href="logout">Logout</a>
                     </li>
                 </ul>

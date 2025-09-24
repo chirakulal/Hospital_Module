@@ -12,5 +12,7 @@ public interface DoctorDetailsService {
 
    boolean saveData(DoctorDTO doctorDTO) throws IOException;
 
+   String getTimeSlotByEmail(String email);
+
 
 }

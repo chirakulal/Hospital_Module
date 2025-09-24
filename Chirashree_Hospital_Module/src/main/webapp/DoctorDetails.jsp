@@ -23,12 +23,10 @@
                      class="d-inline-block align-text-top me-2">
                 <span class="fw-bold fs-4 text-success font-Courier New">Healing Hands Hospital</span>
             </a>
-            <a href="updateDetails" class="btn btn-outline-success fw-semibold">
-                Update Details
-            </a>
-            <a href="dashboard-success" class="btn btn-outline-success fw-semibold">
-                Back to Dashboard
-            </a>
+            <div class="d-flex ms-auto">
+                <a href="updateDetails" class="btn btn-outline-success fw-semibold me-2">Update Details</a>
+                <a href="dashboard-success" class="btn btn-outline-success fw-semibold">Back to Dashboard</a>
+            </div>
         </div>
     </nav>
 </header>

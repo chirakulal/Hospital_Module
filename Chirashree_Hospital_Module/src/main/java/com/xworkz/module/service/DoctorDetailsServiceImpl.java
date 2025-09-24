@@ -32,7 +32,7 @@ public class DoctorDetailsServiceImpl implements DoctorDetailsService {
     private String uploadDir = "D:\\chiraimage\\HospitalProject\\DoctorProfile";
 
     @Autowired
-    private  HospitalRepo hospitalRepo;
+    private HospitalRepo hospitalRepo;
 
     @Autowired
     private EmailService emailService;
@@ -109,4 +109,16 @@ public class DoctorDetailsServiceImpl implements DoctorDetailsService {
 
     }
 
+    @Override
+    public String getTimeSlotByEmail(String email) {
+        String timeSlot = hospitalRepo.getTimeSlotByEmail(email);
+        if (timeSlot != null) {
+            log.info("Time slot found for email {}: {}", email, timeSlot);
+            return timeSlot;
+        } else {
+            log.info("No time slot found for email {}", email);
+            return "No time slot assigned";
+
+        }
+    }
 }
