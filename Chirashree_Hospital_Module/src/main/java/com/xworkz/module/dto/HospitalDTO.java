@@ -3,7 +3,6 @@ package com.xworkz.module.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -23,4 +22,11 @@ public class HospitalDTO {
 
     private String password;
     private LocalDateTime time;
+
+    public static class TimeSlotDTO {
+
+        private int id;
+        private String timeSlot;
+
+    }
 }

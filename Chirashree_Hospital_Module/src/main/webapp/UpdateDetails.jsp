@@ -57,7 +57,7 @@
                 <table class="table table-success table-bordered table-striped table-hover align-middle">
                     <thead class="bg-success-rgb ">
                     <tr>
-                        <th scope="col">ID</th>
+
                         <th scope="col">First Name</th>
                         <th scope="col">Last Name</th>
                         <th scope="col">Email</th>
@@ -74,7 +74,7 @@
                     <tbody>
                     <c:forEach var="doctor" items="${doctorDTOS}">
                         <tr>
-                            <td>${doctor.id}</td>
+
                             <td>${doctor.firstName}</td>
                             <td>${doctor.lastName}</td>
                             <td>${doctor.email}</td>
@@ -83,17 +83,7 @@
                             <td>${doctor.experience}</td>
                             <td>${doctor.address}</td>
                             <td>${doctor.gender}</td>
-
-                            <td>
-                                <c:choose>
-                                    <c:when test="${not empty doctor.degree}">
-                                        ${fn:join(doctor.degree, ', ')}
-                                    </c:when>
-                                    <c:otherwise>
-                                        N/A
-                                    </c:otherwise>
-                                </c:choose>
-                            </td>
+                            <td>${doctor.degree}</td>
                             <td class="text-center">
                                 <c:choose>
                                     <c:when test="${not empty doctor.images}">
@@ -106,7 +96,7 @@
                             </td>
                             <td>
                                 <a href="updateDoctor?email=${doctor.email}" class="btn btn-success btn-sm me-2">Update</a>
-                                <a href="deleteDoctor?id=${doctor.id}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this doctor?');">Delete</a>
+                                <a href="deleteDoctor?email=${doctor.email}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this doctor?');">Delete</a>
                             </td>
                         </tr>
                     </c:forEach>

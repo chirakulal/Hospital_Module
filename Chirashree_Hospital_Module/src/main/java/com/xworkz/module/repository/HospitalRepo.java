@@ -2,10 +2,12 @@ package com.xworkz.module.repository;
 
 import com.xworkz.module.entity.*;
 import jdk.nashorn.internal.runtime.Specialization;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
 
 
 public interface HospitalRepo {
@@ -31,8 +33,10 @@ public interface HospitalRepo {
 List<String> getAllNames(String specialization);
 //
        List<String> getTime(String specialization);
+
+       DoctorEntity findByFullName(String doctorName);
 //
-   boolean assignSlotToDoctor(String doctorName, String timeSlot);
+   boolean assignSlotToDoctor(TimeSlotEntity timeSlotEntity);
 //
    Long countDoctorEmail(String email);
 
@@ -44,9 +48,11 @@ List<String> getAllNames(String specialization);
 
     boolean updateDoctor(MultipartFile file,DoctorEntity doctorEntity);
 
-    boolean DeleteDoctorById(int id);
+    boolean DeleteDoctorByEmail(String email);
 
-    String getTimeSlotByEmail(String email);
+    List<String> getTimeSlotByEmail(String email);
+
+    boolean savePatientData(PatientEntity patientEntity);
 
 
 

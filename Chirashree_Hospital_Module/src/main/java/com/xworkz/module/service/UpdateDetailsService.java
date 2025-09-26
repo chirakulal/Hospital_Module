@@ -1,20 +1,22 @@
 package com.xworkz.module.service;
 
-import com.xworkz.module.dto.DoctorResponseDTO;
+import com.xworkz.module.dto.DoctorDTO;
 import com.xworkz.module.dto.UpdateDTO;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+
 public interface UpdateDetailsService {
 
-    List<DoctorResponseDTO>  getAllDoctors();
+    List<DoctorDTO>  getAllDoctors();
 
-    DoctorResponseDTO getDoctorByEmail(String email);
+    DoctorDTO getDoctorByEmail(String email);
 
-    DoctorResponseDTO getDoctorById(int id);
+    DoctorDTO getDoctorById(int id);
 
     boolean UpdateDoctor(MultipartFile file,UpdateDTO doctorDTO);
 
-    boolean DeleteDoctorById(int id);
+    boolean DeleteDoctorByEmail(String email);
 }

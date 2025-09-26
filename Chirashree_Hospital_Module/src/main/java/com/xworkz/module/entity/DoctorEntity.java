@@ -15,24 +15,44 @@ import java.util.List;
         query = "Select count(e.phone) from  DoctorEntity e where e.phone =:phone")
 @NamedQuery(name = "DoctorEntity.getByEmail",
         query = "select count(e.email)  from DoctorEntity e where e.email=:email")
-@NamedQuery(name = "DoctorEntity.getNamesBySpecialization",query ="Select concat(d.firstName,' ',d.lastName) from DoctorEntity d where d.specializationName =:specializationName and d.timeSlot is null")
-@NamedQuery(name = "DoctorEntity.updateSlotByName", query = "update DoctorEntity d SET d.timeSlot = :timeSlot where concat(d.firstName, ' ', d.lastName) = :doctorName")
+@NamedQuery(
+        name = "DoctorEntity.getNamesBySpecialization",
+        query = "SELECT distinct concat(d.firstName,' ',d.lastName) " +
+                "FROM DoctorEntity d " +
+                "LEFT JOIN d.timeSlots t " +
+                "WHERE d.specializationName = :specializationName "
+)
 
 @NamedQuery(
-        name = "DoctorEntity.getAllDoctorDetails",
-        query = "SELECT DISTINCT d FROM DoctorEntity d LEFT JOIN FETCH d.profilePicture LEFT JOIN FETCH d.degree"
+        name = "DoctorEntity.getAllDoctorDetailsWithProjection",
+        query = "SELECT d, pp.savedName FROM DoctorEntity d  JOIN d.profilePicture pp "
 )
 
 @NamedQuery(
         name = "DoctorEntity.getAllDoctorDetailsByEmail",
-        query = "SELECT  d FROM DoctorEntity d LEFT JOIN FETCH d.profilePicture LEFT JOIN FETCH d.degree where d.email=:email"
+        query = "SELECT  d FROM DoctorEntity d LEFT JOIN FETCH d.profilePicture where d.email=:email"
 )
 
 @NamedQuery(
         name = "DoctorEntity.getAllDoctorDetailsById",
-        query = "SELECT  d FROM DoctorEntity d LEFT JOIN FETCH d.profilePicture LEFT JOIN FETCH d.degree where d.id=:id"
+        query = "SELECT  d FROM DoctorEntity d LEFT JOIN FETCH d.profilePicture where d.id=:id"
 )
-@NamedQuery(name = "DoctorEntity.getTimeSlotByEmail", query = "select d.timeSlot from DoctorEntity d where d.email=:email")
+@NamedQuery(
+        name = "DoctorEntity.getTimeSlotByEmail",
+        query = "SELECT t.timeSlot " +
+                "FROM DoctorEntity d " +
+                "JOIN d.timeSlots t " +
+                "WHERE d.email = :email"
+)
+
+@NamedQuery(
+        name = "DoctorEntity.findByFullName",
+        query = "SELECT d FROM DoctorEntity d WHERE CONCAT(d.firstName, ' ', d.lastName) = :doctorName"
+)
+@NamedQuery(
+        name = "DoctorEntity.DeleteByEmail",
+        query = "DELETE FROM DoctorEntity d WHERE d.email = :email"
+)
 
 public class DoctorEntity {
 
@@ -72,14 +92,11 @@ public class DoctorEntity {
     private String gender;
 
     // Storing multiple degrees as a comma-separated string
-    @ElementCollection
-    @CollectionTable(name = "doctor_degrees", joinColumns = @JoinColumn(name = "id_doctor"))
-    @Column(name = "degree")
-    private List<String> degree = new ArrayList<>();
+    @Column(name = "degree", nullable = false)
+    private String degree;
 
-    @Column(name = "timeslot")
-    private String timeSlot;
-
+    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<TimeSlotEntity> timeSlots = new ArrayList<>();
 
     @Column(name = "created_by")
     private String createdBy;

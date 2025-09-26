@@ -35,7 +35,7 @@
             <div class="card p-4">
                 <h2 class="mb-4 text-center">Update Doctor Details</h2>
                 <form action="saveUpdate" method="post" enctype="multipart/form-data">
-                    <input type="hidden" name="id" value="${doctor.id}">
+
 
                     <div class="mb-3">
                         <label for="firstName" class="form-label">First Name</label>
@@ -75,6 +75,13 @@
                             <div id="experienceError" class="form-text text-danger"></div>
                         </div>
 
+                        <div class="col-md-6">
+                            <label for="degree" class="form-label fw-semibold">Degree</label>
+                            <input type="text" id="degree" name="degree" class="form-control shadow-sm"
+                                   placeholder="Enter Degree (e.g. MBBS, MD, PhD)" value="${doctor.degree}" required>
+                            <div id="degreeError" class="form-text text-danger"></div>
+                        </div>
+
                         <div class="col-12">
                             <label for="address" class="form-label fw-semibold">Address</label>
                             <textarea class="form-control shadow-sm" id="address" name="address" oninput="validateAddress()" rows="2" placeholder="Enter full address" required>${doctor.address}</textarea>
@@ -98,7 +105,7 @@
                             </div>
 
                             <!-- File Input -->
-                            <input type="file" class="form-control shadow-sm" id="images" name="images" accept="image/*">
+                            <input type="file" class="form-control shadow-sm" id="images" name="image" accept="image/*">
                             <small class="form-text text-muted">Leave blank to keep the current image.</small>
                             <input type="hidden" name="oldImage" value="${doctor.images}">
                         </div>
@@ -118,67 +125,7 @@
                             <div id="genderError" class="form-text text-danger"></div>
                         </div>
 
-                        <!-- Degree Dropdown -->
-                        <div class="col-md-6">
-                            <label for="degreeDropdown" class="form-label fw-semibold">Degree</label>
-                            <div class="dropdown w-100">
-                                <button class="btn btn-outline-success dropdown-toggle w-100" type="button" id="degreeDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <c:choose>
-                                        <c:when test="${not empty doctor.degree}">
-                                            ${fn:join(doctor.degree, ', ')}
-                                        </c:when>
-                                        <c:otherwise>
-                                            Select Degree
-                                        </c:otherwise>
-                                    </c:choose>
-                                </button>
-                                <ul class="dropdown-menu w-100 p-2" aria-labelledby="degreeDropdown" style="max-height: 300px; overflow-y: auto;">
-                                    <li><strong class="dropdown-header">Undergraduate</strong></li>
-                                    <li>
-                                        <div class="form-check">
-                                            <input class="form-check-input degree-option" type="checkbox" value="MBBS" id="degree-mbbs" name="degree" <c:if test="${fn:contains(fn:join(doctor.degree, ','), 'MBBS')}">checked</c:if>>
-                                            <label class="form-check-label" for="degree-mbbs">MBBS</label>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="form-check">
-                                            <input class="form-check-input degree-option" type="checkbox" value="BDS" id="degree-bds" name="degree" <c:if test="${fn:contains(fn:join(doctor.degree, ','), 'BDS')}">checked</c:if>>
-                                            <label class="form-check-label" for="degree-bds">BDS</label>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="form-check">
-                                            <input class="form-check-input degree-option" type="checkbox" value="BAMS" id="degree-bams" name="degree" <c:if test="${fn:contains(fn:join(doctor.degree, ','), 'BAMS')}">checked</c:if>>
-                                            <label class="form-check-label" for="degree-bams">BAMS</label>
-                                        </div>
-                                    </li>
 
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><strong class="dropdown-header">Postgraduate</strong></li>
-                                    <li>
-                                        <div class="form-check">
-                                            <input class="form-check-input degree-option" type="checkbox" value="MD" id="degree-md" name="degree" <c:if test="${fn:contains(fn:join(doctor.degree, ','), 'MD')}">checked</c:if>>
-                                            <label class="form-check-label" for="degree-md">MD</label>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="form-check">
-                                            <input class="form-check-input degree-option" type="checkbox" value="MS" id="degree-ms" name="degree" <c:if test="${fn:contains(fn:join(doctor.degree, ','), 'MS')}">checked</c:if>>
-                                            <label class="form-check-label" for="degree-ms">MS</label>
-                                        </div>
-                                    </li>
-
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><strong class="dropdown-header">Other</strong></li>
-                                    <li>
-                                        <div class="form-check">
-                                            <input class="form-check-input degree-option" type="checkbox" value="PhD" id="degree-phd" name="degree" <c:if test="${fn:contains(fn:join(doctor.degree, ','), 'PhD')}">checked</c:if>>
-                                            <label class="form-check-label" for="degree-phd">PhD</label>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
 
                         <hr class="my-4">
                         <button type="submit" class="btn bg-success text-white">Save Changes</button>

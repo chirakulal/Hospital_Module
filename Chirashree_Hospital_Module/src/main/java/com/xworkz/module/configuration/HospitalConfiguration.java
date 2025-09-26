@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
@@ -20,6 +22,7 @@ import java.util.Properties;
 @EnableWebMvc
 @Slf4j
 @ComponentScan(basePackages = "com.xworkz.module")
+@PropertySource("classpath:application.properties")
 public class HospitalConfiguration implements WebMvcConfigurer {
 
     public HospitalConfiguration(){
@@ -36,31 +39,10 @@ public class HospitalConfiguration implements WebMvcConfigurer {
         registry.jsp("/",".jsp");
     }
 
-    // Corrected EntityManagerFactoryBean configuration
-    @Bean
-    public LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean(){
-        LocalContainerEntityManagerFactoryBean factoryBean = new LocalContainerEntityManagerFactoryBean();
-        factoryBean.setDataSource(dataSource());
-        factoryBean.setPackagesToScan("com.xworkz.module.entity");
-
-        Properties jpaProperties = new Properties();
-        jpaProperties.put("hibernate.dialect", "org.hibernate.dialect.MySQL8Dialect");
-        jpaProperties.put("hibernate.hbm2ddl.auto", "update"); // Crucial for schema management
-        jpaProperties.put("hibernate.show_sql", "true");
-
-        factoryBean.setJpaProperties(jpaProperties);
-        factoryBean.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
-        return factoryBean;
-    }
 
     @Bean
-    public DataSource dataSource(){
-        DriverManagerDataSource source = new DriverManagerDataSource();
-        source.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        source.setUrl("jdbc:mysql://localhost:3306/hospital");
-        source.setUsername("root");
-        source.setPassword("Chir@#$123");
-        return source;
+    public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer(){
+        return new PropertySourcesPlaceholderConfigurer();
     }
 
 

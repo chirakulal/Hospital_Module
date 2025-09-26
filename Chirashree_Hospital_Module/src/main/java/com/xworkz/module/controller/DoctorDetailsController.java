@@ -45,8 +45,11 @@ public class DoctorDetailsController {
 
 
     @PostMapping("saveDoctor")
-    public ModelAndView SaveDoctor( ModelAndView modelAndView, @Valid DoctorDTO doctorDTO, BindingResult bindingResult ,HttpSession httpSession) throws IOException {
+    public ModelAndView SaveDoctor(@RequestParam("image")MultipartFile file, ModelAndView modelAndView, @Valid DoctorDTO doctorDTO, BindingResult bindingResult ,HttpSession httpSession) throws IOException {
         log.info("Running Save Doctor");
+        log.info("Received file: " + file.getOriginalFilename());
+        log.info("File size: " + file.getSize());
+        log.info("Doctor DTO: " + doctorDTO);
         String email= (String) httpSession.getAttribute("loginEmail");
         doctorDTO.setCreatedBy(email);
         ImageDTO imageDTO=new ImageDTO();
@@ -62,7 +65,7 @@ public class DoctorDetailsController {
         }
 
 
-        boolean result =   doctorDetailsService.saveData(doctorDTO);
+        boolean result =   doctorDetailsService.saveData(file,doctorDTO);
         if(result){
             modelAndView.addObject("success", "Registered Successfully");
             modelAndView.addObject("specializations",doctorDetailsService.getAllNames());

@@ -1,9 +1,8 @@
 package com.xworkz.module.controller;
 
-import com.xworkz.module.dto.DoctorResponseDTO;
+import com.xworkz.module.dto.DoctorDTO;
 import com.xworkz.module.dto.UpdateDTO;
 import com.xworkz.module.service.DoctorDetailsService;
-import com.xworkz.module.service.SpecializationService;
 import com.xworkz.module.service.UpdateDetailsService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
@@ -54,8 +53,8 @@ public class UpdateAndDeleteController {
     @GetMapping("updateDetails")
     public ModelAndView updateDetails(ModelAndView modelAndView) {
         log.info("Running updateDetails in UpdateAndDeleteController");
-        List<DoctorResponseDTO> doctorDTOS = updateDetailsService.getAllDoctors();
-        for (DoctorResponseDTO dto : doctorDTOS) {
+        List<DoctorDTO> doctorDTOS = updateDetailsService.getAllDoctors();
+        for (DoctorDTO dto : doctorDTOS) {
             log.info("DoctorDTO: " + dto);
         }
         modelAndView.addObject("doctorDTOS", doctorDTOS);
@@ -67,7 +66,7 @@ public class UpdateAndDeleteController {
     @GetMapping("updateDoctor")
     public ModelAndView updateDoctor(@RequestParam String email, ModelAndView modelAndView) {
         log.info("Running updateDoctor in UpdateAndDeleteController with email: " + email);
-        DoctorResponseDTO doctorDTOS = updateDetailsService.getDoctorByEmail(email);
+        DoctorDTO doctorDTOS = updateDetailsService.getDoctorByEmail(email);
         List<String> specializations = doctorDetailsService.getAllNames();
         log.info("Specializations: " + specializations);
         if (doctorDTOS != null) {
@@ -85,7 +84,7 @@ public class UpdateAndDeleteController {
     }
 
     @PostMapping("saveUpdate")
-    public ModelAndView saveUpdate(@Valid UpdateDTO updateDTO, BindingResult bindingResult, ModelAndView modelAndView, MultipartFile file, HttpSession httpSession) {
+    public ModelAndView saveUpdate(@Valid UpdateDTO updateDTO, BindingResult bindingResult, ModelAndView modelAndView,@RequestParam("image") MultipartFile file, HttpSession httpSession) {
 
         log.info("Running saveUpdate in UpdateAndDeleteController");
         log.info("Received DoctorDTO: " + updateDTO);
@@ -106,7 +105,7 @@ public class UpdateAndDeleteController {
             modelAndView.addObject("error", "Failed to update doctor details. Please try again.");
             log.error("Failed to update doctor details for email: " + updateDTO.getEmail());
         }
-        List<DoctorResponseDTO> doctorDTOS = updateDetailsService.getAllDoctors();
+        List<DoctorDTO> doctorDTOS = updateDetailsService.getAllDoctors();
         modelAndView.addObject("doctorDTOS", doctorDTOS);
         modelAndView.setViewName("UpdateDetails");
         return modelAndView;
@@ -114,15 +113,15 @@ public class UpdateAndDeleteController {
     }
 
     @GetMapping("deleteDoctor")
-    public ModelAndView deleteDoctor(@RequestParam int id, ModelAndView modelAndView) {
-        log.info("Running deleteDoctor in UpdateAndDeleteController with id: " + id);
-        boolean isDeleted = updateDetailsService.DeleteDoctorById(id);
+    public ModelAndView deleteDoctor(@RequestParam String email, ModelAndView modelAndView) {
+        log.info("Running deleteDoctor in UpdateAndDeleteController with email: " + email);
+        boolean isDeleted = updateDetailsService.DeleteDoctorByEmail(email);
         if (isDeleted) {
             modelAndView.addObject("success", "Doctor deleted successfully.");
         } else {
             modelAndView.addObject("error", "Failed to delete doctor. Please try again.");
         }
-        List<DoctorResponseDTO> doctorDTOS = updateDetailsService.getAllDoctors();
+        List<DoctorDTO> doctorDTOS = updateDetailsService.getAllDoctors();
         modelAndView.addObject("doctorDTOS", doctorDTOS);
         modelAndView.setViewName("UpdateDetails");
         return modelAndView;

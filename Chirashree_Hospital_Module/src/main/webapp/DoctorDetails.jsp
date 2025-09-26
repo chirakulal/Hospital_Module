@@ -55,7 +55,7 @@
         </c:if>
 
         <!-- Form -->
-        <form action="saveDoctor" method="post" enctype="multipart/form-data" class="row g-3">
+        <form action="saveDoctor" method="post"  enctype="multipart/form-data" class="row g-3">
 
             <!-- First Name -->
             <div class="col-md-6">
@@ -120,7 +120,7 @@
             <!-- Profile Picture -->
             <div class="col-md-6">
                 <label for="images" class="form-label fw-semibold">Upload Profile Picture</label>
-                <input type="file" class="form-control shadow-sm" id="images" name="images" accept="image/*" required>
+                <input type="file" class="form-control shadow-sm" id="images" name="image" accept="image/*" required>
                 <small id="profilePictureError" class="text-danger"></small>
             </div>
 
@@ -142,59 +142,12 @@
                 <div id="genderError" class="form-text text-danger"></div>
             </div>
 
-            <!-- Degree -->
+            <!-- Degree (Text Input) -->
             <div class="col-md-6">
-                <label for="degreeDropdown" class="form-label fw-semibold">Degree</label>
-                <div class="dropdown w-100">
-                    <button class="btn btn-outline-secondary dropdown-toggle w-100 text-start shadow-sm"
-                            type="button" id="degreeDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                        Select Degree
-                    </button>
-                    <ul class="dropdown-menu w-100 p-2" aria-labelledby="degreeDropdown"
-                        style="max-height: 300px; overflow-y: auto;">
-                        <li><strong class="dropdown-header">Undergraduate</strong></li>
-                        <li>
-                            <div class="form-check">
-                                <input class="form-check-input degree-option" type="checkbox" value="MBBS" id="degree-mbbs" name="degree">
-                                <label class="form-check-label" for="degree-mbbs">MBBS</label>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="form-check">
-                                <input class="form-check-input degree-option" type="checkbox" value="BDS" id="degree-bds" name="degree">
-                                <label class="form-check-label" for="degree-bds">BDS</label>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="form-check">
-                                <input class="form-check-input degree-option" type="checkbox" value="BAMS" id="degree-bams" name="degree">
-                                <label class="form-check-label" for="degree-bams">BAMS</label>
-                            </div>
-                        </li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><strong class="dropdown-header">Postgraduate</strong></li>
-                        <li>
-                            <div class="form-check">
-                                <input class="form-check-input degree-option" type="checkbox" value="MD" id="degree-md" name="degree">
-                                <label class="form-check-label" for="degree-md">MD</label>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="form-check">
-                                <input class="form-check-input degree-option" type="checkbox" value="MS" id="degree-ms" name="degree">
-                                <label class="form-check-label" for="degree-ms">MS</label>
-                            </div>
-                        </li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><strong class="dropdown-header">Other</strong></li>
-                        <li>
-                            <div class="form-check">
-                                <input class="form-check-input degree-option" type="checkbox" value="PhD" id="degree-phd" name="degree">
-                                <label class="form-check-label" for="degree-phd">PhD</label>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
+                <label for="degree" class="form-label fw-semibold">Degree</label>
+                <input type="text" id="degree" name="degree" class="form-control shadow-sm"
+                       placeholder="Enter Degree (e.g. MBBS, MD, PhD)" required>
+                <div id="degreeError" class="form-text text-danger"></div>
             </div>
 
             <!-- Submit Button -->

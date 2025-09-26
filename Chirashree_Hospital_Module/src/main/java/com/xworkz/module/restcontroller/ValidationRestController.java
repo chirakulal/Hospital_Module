@@ -1,6 +1,6 @@
 package com.xworkz.module.restcontroller;
 
-import com.xworkz.module.dto.DoctorResponseDTO;
+import com.xworkz.module.dto.DoctorDTO;
 import com.xworkz.module.service.DoctorDetailsService;
 import com.xworkz.module.service.HospitalService;
 import com.xworkz.module.service.UpdateDetailsServiceImpl;
@@ -72,8 +72,9 @@ public class ValidationRestController {
     @ResponseBody
     public String checkDoctor(@PathVariable String specialization, Model model) {
         log.info(specialization);
-      List<DoctorResponseDTO> dtos = updateDetailsService.getAllDoctors();//same name may cause problem
+      List<DoctorDTO> dtos = updateDetailsService.getAllDoctors();//same name may cause problem
         log.info("dtos size: {}", dtos.size());
+        log.info("dtos: {}", dtos);
 
 
         if(dtos.isEmpty()){
@@ -82,7 +83,7 @@ public class ValidationRestController {
         }
         List<String> matchedDoctors = new ArrayList<>();
 
-        for (DoctorResponseDTO dto : dtos) {
+        for (DoctorDTO dto : dtos) {
             if (specialization.equals(dto.getSpecializationName())) {
                 matchedDoctors.add(dto.getFirstName()+" "+dto.getLastName()+"|"+dto.getEmail());
             }
@@ -98,9 +99,14 @@ public class ValidationRestController {
     @GetMapping("getTimeSlotByEmail/{email}")
     public String getTimeSlotByEmail(@PathVariable String email){
         log.info(email);
-        String timeSlot = doctorDetailsService.getTimeSlotByEmail(email);
-        log.info(timeSlot);
-        if(timeSlot!=null) return timeSlot;
-        else return "No Time Slot Assigned";
+        List<String> timeSlot = doctorDetailsService.getTimeSlotByEmail(email);
+
+        if (timeSlot == null || timeSlot.isEmpty()) {
+            log.info("No time slots found for email: {}", email);
+            return "No Time Slot Assigned";
+        }
+        String resultString = String.join(",", timeSlot);
+        log.info("Returning time slot string: {}", resultString);
+        return resultString;
     }
 }

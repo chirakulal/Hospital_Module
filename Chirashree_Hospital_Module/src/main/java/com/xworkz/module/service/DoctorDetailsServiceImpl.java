@@ -3,6 +3,7 @@ package com.xworkz.module.service;
 import com.xworkz.module.dto.DoctorDTO;
 import com.xworkz.module.entity.DoctorEntity;
 import com.xworkz.module.entity.ImageEntity;
+import com.xworkz.module.entity.TimeSlotEntity;
 import com.xworkz.module.repository.HospitalRepo;
 import com.xworkz.module.service.email.EmailService;
 import lombok.Value;
@@ -52,10 +53,10 @@ public class DoctorDetailsServiceImpl implements DoctorDetailsService {
 
 
     @Override
-    public boolean saveData(DoctorDTO doctorDTO) throws IOException {
+    public boolean saveData(MultipartFile file,DoctorDTO doctorDTO) throws IOException {
 
         // 1. Save the image file to the server
-        MultipartFile file = doctorDTO.getImages();
+
         String originalExtension = FilenameUtils.getExtension(file.getOriginalFilename());
         String fileName = doctorDTO.getFirstName() + "_" + System.currentTimeMillis() + "." + originalExtension;
         Path uploadPath = Paths.get(uploadDir);
@@ -80,6 +81,9 @@ public class DoctorDetailsServiceImpl implements DoctorDetailsService {
         imageEntity.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         imageEntity.setCreatedBy(doctorDTO.getCreatedBy()); // Assuming this is set by a security context
 
+
+
+
         DoctorEntity doctorEntity = new DoctorEntity();
 
 
@@ -96,6 +100,9 @@ public class DoctorDetailsServiceImpl implements DoctorDetailsService {
         doctorEntity.setCreatedBy(doctorDTO.getCreatedBy());
         doctorEntity.setProfilePicture(imageEntity);
 
+
+
+
         boolean saved = hospitalRepo.saveData(doctorEntity);
         if (saved) {
             log.info("Doctor data saved successfully");
@@ -110,14 +117,14 @@ public class DoctorDetailsServiceImpl implements DoctorDetailsService {
     }
 
     @Override
-    public String getTimeSlotByEmail(String email) {
-        String timeSlot = hospitalRepo.getTimeSlotByEmail(email);
+    public List<String> getTimeSlotByEmail(String email) {
+        List<String> timeSlot = hospitalRepo.getTimeSlotByEmail(email);
         if (timeSlot != null) {
             log.info("Time slot found for email {}: {}", email, timeSlot);
             return timeSlot;
         } else {
             log.info("No time slot found for email {}", email);
-            return "No time slot assigned";
+            return Collections.emptyList();
 
         }
     }

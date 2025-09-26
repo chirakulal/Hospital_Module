@@ -43,10 +43,10 @@ public class DoctorDTO {
     private String gender;
 
     @NotNull(message = "Degree is required")
-    private List<String> degree;
+    private String degree;
 
     // This field is for handling the file upload from the form
-    private MultipartFile images;
+    private String images;
 
     private String timeSlot;
 

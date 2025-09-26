@@ -1,5 +1,6 @@
 package com.xworkz.module.controller;
 
+import com.xworkz.module.dto.DoctorDTO;
 import com.xworkz.module.dto.SpecializationDTO;
 import com.xworkz.module.service.AddSlotService;
 import com.xworkz.module.service.SpecializationService;

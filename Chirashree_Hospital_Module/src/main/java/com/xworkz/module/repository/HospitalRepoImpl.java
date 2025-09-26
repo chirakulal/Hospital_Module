@@ -18,6 +18,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -339,7 +340,33 @@ public class HospitalRepoImpl implements HospitalRepo {
     }
 
     @Override
-    public boolean assignSlotToDoctor(String doctorName, String timeSlot) {
+    public DoctorEntity findByFullName(String doctorName) {
+        EntityManager entityManager = null;
+        EntityTransaction entityTransaction = null;
+        DoctorEntity doctor = null;
+        try{
+            entityManager = entityManagerFactory.createEntityManager();
+            entityTransaction =entityManager.getTransaction();
+            entityTransaction.begin();
+            Query query= entityManager.createNamedQuery("DoctorEntity.findByFullName");
+            query.setParameter("doctorName",doctorName);
+            doctor =(DoctorEntity) query.getSingleResult();
+            entityTransaction.commit();
+            return doctor;
+        }catch (Exception e) {
+            if (entityTransaction != null && entityTransaction.isActive()) {
+                entityTransaction.rollback();
+            }
+        }finally {
+            entityManager.close();
+        }
+
+
+        return null;
+    }
+
+    @Override
+    public boolean assignSlotToDoctor(TimeSlotEntity timeSlotEntity) {
         EntityManager entityManager = null;
         EntityTransaction entityTransaction = null;
         boolean update = false;
@@ -349,14 +376,10 @@ public class HospitalRepoImpl implements HospitalRepo {
             entityTransaction = entityManager.getTransaction();
 
             entityTransaction.begin();
-           Query query = entityManager.createNamedQuery("DoctorEntity.updateSlotByName");
-            query.setParameter("doctorName",doctorName);
-            query.setParameter("timeSlot",timeSlot);
-            int rowsUpdated = query.executeUpdate();
-            log.info("Rows updated: {}", rowsUpdated);
-
+            entityManager.persist(timeSlotEntity);
             entityTransaction.commit();
-            update = rowsUpdated>0;
+            update = true;
+            return update;
 
 
         }catch (Exception e){
@@ -370,7 +393,7 @@ public class HospitalRepoImpl implements HospitalRepo {
 //
       return update;
     }
-//
+
     @Override
     public Long countDoctorEmail(String email) {
         EntityManager entityManager=null;
@@ -403,14 +426,19 @@ public class HospitalRepoImpl implements HospitalRepo {
     public List<DoctorEntity> getAllDoctors() {
         EntityManager entityManager =null;
         EntityTransaction entityTransaction =null;
-        List<DoctorEntity> doctorEntity = null;
+        List<DoctorEntity> doctorEntity = new ArrayList<>();
 
         try{
             entityManager =entityManagerFactory.createEntityManager();
             entityTransaction=entityManager.getTransaction();
             entityTransaction.begin();
-            Query query =entityManager.createNamedQuery("DoctorEntity.getAllDoctorDetails");
-             doctorEntity= query.getResultList();
+            Query query =entityManager.createNamedQuery("DoctorEntity.getAllDoctorDetailsWithProjection");
+             List<Object[]> result= query.getResultList();
+
+            for (Object[] row : result) {
+                DoctorEntity doctor = (DoctorEntity) row[0];
+                doctorEntity.add(doctor);
+            }
             log.info("{}",doctorEntity);
             entityTransaction.commit();
             return doctorEntity;
@@ -549,7 +577,7 @@ return null;
     }
 
     @Override
-    public boolean DeleteDoctorById(int id) {
+    public boolean DeleteDoctorByEmail(String email) {
         EntityManager entityManager = null;
         EntityTransaction entityTransaction = null;
         boolean deleted = false;
@@ -557,14 +585,17 @@ return null;
             entityManager = entityManagerFactory.createEntityManager();
             entityTransaction = entityManager.getTransaction();
             entityTransaction.begin();
-            DoctorEntity doctorEntity = entityManager.find(DoctorEntity.class, id);
-            if (doctorEntity != null) {
-                entityManager.remove(doctorEntity);
-                entityTransaction.commit();
+           Query query = entityManager.createNamedQuery("DoctorEntity.DeleteByEmail");
+            query.setParameter("email", email);
+          int  rowsDeleted = query.executeUpdate();
+            log.info("Rows deleted: {}", rowsDeleted);
+            entityTransaction.commit();
+            if (rowsDeleted > 0) {
                 deleted = true;
-            } else {
-                log.info("Doctor with id {} not found", id);
+                return deleted;
             }
+
+
         } catch (Exception e) {
             if (entityTransaction != null && entityTransaction.isActive()) {
                 entityTransaction.rollback();
@@ -579,17 +610,17 @@ return null;
     }
 
     @Override
-    public String getTimeSlotByEmail(String email) {
+    public List<String> getTimeSlotByEmail(String email) {
         EntityManager entityManager = null;
         EntityTransaction entityTransaction = null;
-        String timeSlot=null;
+        List<String> timeSlot=null;
         try{
             entityManager = entityManagerFactory.createEntityManager();
             entityTransaction =entityManager.getTransaction();
             entityTransaction.begin();
             Query query= entityManager.createNamedQuery("DoctorEntity.getTimeSlotByEmail");
             query.setParameter("email",email);
-            timeSlot =(String) query.getSingleResult();
+            timeSlot = query.getResultList();
             log.info("Time Slot: {}", timeSlot);
             entityTransaction.commit();
             return timeSlot;
@@ -601,5 +632,30 @@ return null;
             entityManager.close();
         }
         return timeSlot;
+    }
+
+    @Override
+    public boolean savePatientData(PatientEntity patientEntity) {
+        EntityManager entityManager = null;
+        EntityTransaction entityTransaction = null;
+
+        try {
+            entityManager = entityManagerFactory.createEntityManager();
+            entityTransaction = entityManager.getTransaction();
+
+            entityTransaction.begin();
+            entityManager.persist(patientEntity);
+            entityTransaction.commit();
+
+            return true;
+        } catch (Exception e) {
+            if (entityTransaction != null && entityTransaction.isActive()) {
+                entityTransaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
+        }
+        return false;
     }
 }

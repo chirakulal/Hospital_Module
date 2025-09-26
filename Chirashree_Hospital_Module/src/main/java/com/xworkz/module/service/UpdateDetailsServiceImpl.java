@@ -1,6 +1,6 @@
 package com.xworkz.module.service;
 
-import com.xworkz.module.dto.DoctorResponseDTO;
+import com.xworkz.module.dto.DoctorDTO;
 import com.xworkz.module.dto.UpdateDTO;
 import com.xworkz.module.entity.DoctorEntity;
 import com.xworkz.module.repository.HospitalRepo;
@@ -31,45 +31,32 @@ public class UpdateDetailsServiceImpl implements UpdateDetailsService{
 
 
     @Override
-    public List<DoctorResponseDTO> getAllDoctors() {
+    public List<DoctorDTO> getAllDoctors() {
         List<DoctorEntity> doctorEntity = hospitalRepo.getAllDoctors();
 
 
         if(doctorEntity == null){
             return null;
         }
-        List<DoctorResponseDTO> dtos = new ArrayList<>();
+        List<DoctorDTO> dtos = new ArrayList<>();
         for(DoctorEntity entity : doctorEntity){
-            DoctorResponseDTO doctorUpdateDTO = new DoctorResponseDTO();
-            BeanUtils.copyProperties(entity, doctorUpdateDTO);
+            DoctorDTO doctorDTO = new DoctorDTO();
+            BeanUtils.copyProperties(entity, doctorDTO);
             if(entity.getProfilePicture().getFilePath()!=null) {
-                doctorUpdateDTO.setImages(entity.getProfilePicture().getSavedName());
+                doctorDTO.setImages(entity.getProfilePicture().getSavedName());
             }
-
-           if(entity.getDegree()!=null){
-              List<String> degrees = entity.getDegree();
-              String[] degreeArray = degrees.toArray(new String[0]);
-              doctorUpdateDTO.setDegree(degreeArray);
-
-           }
-
-
-            dtos.add(doctorUpdateDTO);
+            dtos.add(doctorDTO);
         }
         return dtos;
     }
 
     @Override
-    public DoctorResponseDTO getDoctorById(int id) {
+    public DoctorDTO getDoctorById(int id) {
         DoctorEntity doctorEntity = hospitalRepo.getAllDoctorsById(id);
         if(doctorEntity != null){
-            DoctorResponseDTO doctorDTO = new DoctorResponseDTO();
+            DoctorDTO doctorDTO = new DoctorDTO();
             BeanUtils.copyProperties(doctorEntity, doctorDTO);
-            if(doctorEntity.getDegree()!=null){
-                List<String> degrees = doctorEntity.getDegree();
-                String[] degreeArray = degrees.toArray(new String[0]);
-                doctorDTO.setDegree(degreeArray);
-            }
+
             if(doctorEntity.getProfilePicture().getFilePath()!=null) {
                 doctorDTO.setImages(doctorEntity.getProfilePicture().getSavedName());
             }
@@ -79,7 +66,7 @@ public class UpdateDetailsServiceImpl implements UpdateDetailsService{
     }
 
     @Override
-    public boolean UpdateDoctor(MultipartFile file,UpdateDTO doctorDTO) {
+    public boolean UpdateDoctor( MultipartFile file, UpdateDTO doctorDTO) {
         log.info("Running UpdateDoctor in UpdateDetailsServiceImpl");
         log.info("DoctorDTO: " + doctorDTO);
         DoctorEntity doctorEntity = new DoctorEntity();
@@ -98,24 +85,19 @@ public class UpdateDetailsServiceImpl implements UpdateDetailsService{
     }
 
     @Override
-    public boolean DeleteDoctorById(int id) {
-        log.info("Running DeleteDoctorById in UpdateDetailsServiceImpl with id: " + id);
-        boolean isDeleted = hospitalRepo.DeleteDoctorById(id);
+    public boolean DeleteDoctorByEmail(String email) {
+        log.info("Running DeleteDoctorById in UpdateDetailsServiceImpl with email: " + email);
+        boolean isDeleted = hospitalRepo.DeleteDoctorByEmail(email);
         log.info("Delete operation result: " + isDeleted);
         return isDeleted;
     }
 
     @Override
-    public DoctorResponseDTO getDoctorByEmail(String email) {
+    public DoctorDTO getDoctorByEmail(String email) {
         DoctorEntity doctorEntity = hospitalRepo.getAllDoctorsByEmail(email);
         if(doctorEntity != null){
-            DoctorResponseDTO doctorDTO = new DoctorResponseDTO();
+            DoctorDTO doctorDTO = new DoctorDTO();
             BeanUtils.copyProperties(doctorEntity, doctorDTO);
-            if(doctorEntity.getDegree()!=null){
-                List<String> degrees = doctorEntity.getDegree();
-                String[] degreeArray = degrees.toArray(new String[0]);
-                doctorDTO.setDegree(degreeArray);
-            }
             if(doctorEntity.getProfilePicture().getFilePath()!=null) {
                 doctorDTO.setImages(doctorEntity.getProfilePicture().getSavedName());
             }
