@@ -47,12 +47,14 @@ import java.util.List;
 
 @NamedQuery(
         name = "DoctorEntity.findByFullName",
-        query = "SELECT d FROM DoctorEntity d WHERE CONCAT(d.firstName, ' ', d.lastName) = :doctorName"
+        query = "SELECT d FROM DoctorEntity d LEFT JOIN FETCH d.timeSlots WHERE CONCAT(d.firstName, ' ', d.lastName) = :doctorName"
 )
 @NamedQuery(
         name = "DoctorEntity.DeleteByEmail",
         query = "DELETE FROM DoctorEntity d WHERE d.email = :email"
 )
+
+
 
 public class DoctorEntity {
 

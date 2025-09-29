@@ -1,6 +1,8 @@
 package com.xworkz.module.service;
 
 import com.xworkz.module.dto.DoctorDTO;
+import com.xworkz.module.entity.DoctorEntity;
+import com.xworkz.module.entity.TimeSlotEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,5 +19,8 @@ public interface DoctorDetailsService {
 
     List<String> getTimeSlotByEmail(String email);
 
+    DoctorEntity findByFullName(String doctorName);
+
+    TimeSlotEntity getTImeSlotIdByTime(String time);
 
 }

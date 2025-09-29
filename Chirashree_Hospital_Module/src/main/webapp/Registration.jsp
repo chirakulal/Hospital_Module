@@ -52,7 +52,7 @@
             </div>
         </c:if>
 
-        <form action="registerPatient" method="post">
+        <form action="savePatient" method="post">
 
             <!-- First & Last Name -->
             <div class="row mb-3">
@@ -94,22 +94,24 @@
                         </c:forEach>
                     </select>
                 </div>
+
                 <div class="col-md-6">
-                    <label for="dob" class="form-label">Date of Birth</label>
-                    <input type="date" class="form-control" id="dob" name="dob" required>
-                    <div id="dateOfBirthError" class="form-text text-danger"></div>
-                </div>
-                <div class="col-md-6">
-                    <label for="dob" class="form-label">Age</label>
+                    <label for="age" class="form-label">Age</label>
                     <input type="number" class="form-control" id="age" name="age" required>
                     <div id="ageError" class="form-text text-danger"></div>
                 </div>
+
                 <div class="col-md-6">
                     <label for="healthConcern" class="form-label">Symptoms / Health Concern</label>
                     <textarea id="healthConcern" name="healthConcern" class="form-control" rows="1" required></textarea>
                 </div>
             </div>
 
+            <div class="col-md-6">
+                <label for="appointmentDate" class="form-label">Date of Appointment</label>
+                <input type="date" class="form-control" id="appointmentDate" name="appointmentDate" required>
+                <div id="appointmentDateError" class="form-text text-danger"></div>
+            </div>
             <div class="col-md-6">
                 <label for="specialization" class="form-label fw-semibold">Specialization</label>
                 <select class="form-select shadow-sm" id="specialization" onchange="fetchDoctor()" name="specializationName" required>
@@ -148,9 +150,20 @@
             <div class="text-center">
                 <button type="submit" class="btn btn-primary px-4">Register</button>
             </div>
+
+            <!-- Feedback Messages -->
+            <c:choose>
+                <c:when test="${not empty error}">
+                    <div class="alert alert-danger mt-3 text-center shadow-sm">${error}</div>
+                </c:when>
+                <c:when test="${not empty success}">
+                    <div class="alert alert-success mt-3 text-center shadow-sm">${success}</div>
+                </c:when>
+            </c:choose>
         </form>
     </div>
 </div>
+    </div>
 </section>
 
 <!-- Footer -->

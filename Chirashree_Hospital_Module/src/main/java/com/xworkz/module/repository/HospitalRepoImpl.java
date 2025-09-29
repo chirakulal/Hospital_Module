@@ -9,10 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Query;
+import javax.persistence.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -658,4 +655,65 @@ return null;
         }
         return false;
     }
+
+    @Override
+    public TimeSlotEntity getTImeSlotIdByTime(String time) {
+        EntityManager entityManager = null;
+        EntityTransaction entityTransaction = null;
+        TimeSlotEntity timeSlot = null;
+        try {
+            entityManager = entityManagerFactory.createEntityManager();
+            entityTransaction = entityManager.getTransaction();
+            entityTransaction.begin();
+            Query query = entityManager.createNamedQuery("TimeSlotEntity.getTimeSlotIdByTime");
+            query.setParameter("timeSlot", time);
+            timeSlot = (TimeSlotEntity) query.getSingleResult();
+            log.info("Time Slot Entity: {}", timeSlot);
+            entityTransaction.commit();
+            return timeSlot;
+        } catch (Exception e) {
+            if (entityTransaction != null && entityTransaction.isActive()) {
+                entityTransaction.rollback();
+            }
+        } finally {
+            entityManager.close();
+        }
+        return timeSlot;
+    }
+
+    @Override
+    public PatientEntity getPatientByEmail(String email) {
+        EntityManager entityManager = null;
+        EntityTransaction entityTransaction = null;
+        PatientEntity patient = null;
+        try{
+            entityManager = entityManagerFactory.createEntityManager();
+            entityTransaction =entityManager.getTransaction();
+            entityTransaction.begin();
+            Query query= entityManager.createNamedQuery("PatientEntity.getByEmail");
+            query.setParameter("email",email);
+            try {
+                // Line 698: This is where getSingleResult() throws the exception\
+                patient = (PatientEntity) query.getSingleResult();
+                return patient;
+            } catch (NoResultException e) {
+                // If no entity is found, return null instead of throwing an exception
+                return null;
+            } catch (NonUniqueResultException e) {
+                // Good practice: this happens if the query returns > 1 result (shouldn't happen for a unique field like ID/Email)
+                log.error("Multiple results found for unique field query: {}", email);
+                throw e; // Or handle as needed
+            }
+            //entityTransaction.commit();
+        }catch (Exception e){
+            if(entityTransaction!=null &&entityTransaction.isActive()){
+                entityTransaction.rollback();
+            }
+            e.printStackTrace();
+        }finally {
+            entityManager.close();
+        }
+        return null;
+    }
+
 }

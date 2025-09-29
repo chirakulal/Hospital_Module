@@ -54,6 +54,13 @@ List<String> getAllNames(String specialization);
 
     boolean savePatientData(PatientEntity patientEntity);
 
+    PatientEntity getPatientByEmail(String email);
+
+
+
+    TimeSlotEntity getTImeSlotIdByTime(String time);
+
+
 
 
 }

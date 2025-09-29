@@ -128,4 +128,28 @@ public class DoctorDetailsServiceImpl implements DoctorDetailsService {
 
         }
     }
+
+    @Override
+    public DoctorEntity findByFullName(String doctorName) {
+        DoctorEntity doctor = hospitalRepo.findByFullName(doctorName);
+        if (doctor != null) {
+            log.info("Doctor ID found for name {}: {}", doctorName, doctor.getId());
+            return doctor;
+        } else {
+            log.info("No Doctor ID found for name {}", doctorName);
+            return null;
+        }
+    }
+
+    @Override
+    public TimeSlotEntity getTImeSlotIdByTime(String time) {
+        TimeSlotEntity timeSlotEntity = hospitalRepo.getTImeSlotIdByTime(time);
+        if (timeSlotEntity != null) {
+            log.info("Time Slot ID found for time {}: {}", time,   timeSlotEntity.getId());
+            return timeSlotEntity;
+        } else {
+            log.info("No Time Slot ID found for time {}", time);
+            return null;
+        }
+    }
 }

@@ -10,6 +10,10 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "doctor_time_slots")
+
+@NamedQuery(name = "TimeSlotEntity.getTimeSlotIdByTime",
+        query = "Select t from TimeSlotEntity t where timeSlot=:timeSlot"
+)
 public class TimeSlotEntity {
 
     @Id
