@@ -24,7 +24,6 @@
                 <span class="fw-bold fs-4 text-success font-Courier New">Healing Hands Hospital</span>
             </a>
             <div class="d-flex ms-auto">
-                <a href="updateDetails" class="btn btn-outline-success fw-semibold me-2">Update Details</a>
                 <a href="dashboard-success" class="btn btn-outline-success fw-semibold">Back to Dashboard</a>
             </div>
         </div>
@@ -40,7 +39,7 @@
 
 <div class="container mt-5">
     <div class="card shadow p-4 rounded-4">
-        <h3 class="mb-4 text-center">Patient Registration Form</h3>
+        <h3 class="text-success mb-4 text-center fw-bold">Patient Registration Form</h3>
         <c:if test="${not empty errors}">
             <div class="alert alert-danger text-center shadow-sm">
                 <c:forEach var="err" items="${errors}" varStatus="status">
@@ -148,7 +147,7 @@
 
             <!-- Submit Button -->
             <div class="text-center">
-                <button type="submit" class="btn btn-primary px-4">Register</button>
+                <button type="submit" class="btn btn-success px-4">Register</button>
             </div>
 
             <!-- Feedback Messages -->

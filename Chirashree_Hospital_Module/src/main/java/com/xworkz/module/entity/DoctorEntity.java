@@ -56,7 +56,7 @@ import java.util.List;
 
 
 
-public class DoctorEntity {
+public class DoctorEntity extends AuditEntity  {
 
     @Id
     @Column(name = "id_doctor")
@@ -100,16 +100,6 @@ public class DoctorEntity {
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TimeSlotEntity> timeSlots = new ArrayList<>();
 
-    @Column(name = "created_by")
-    private String createdBy;
 
-    @Column(name = "created_at")
-    private Timestamp createdAt;
-
-    @Column(name = "updated_by")
-    private String updatedBy;
-
-    @Column(name = "updated_at")
-    private Timestamp updatedAt;
 
 }

@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @Entity
 @Table(name = "image")
-public class ImageEntity {
+public class ImageEntity extends AuditEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,16 +36,5 @@ public class ImageEntity {
     @Column(name = "saved_name", nullable = false)
     private String savedName;
 
-    @Column(name = "created_by")
-    private String createdBy;
-
-    @Column(name = "created_at")
-    private Timestamp createdAt;
-
-    @Column(name = "updated_by")
-    private String updatedBy;
-
-    @Column(name = "updated_at")
-    private Timestamp updatedAt;
 
 }

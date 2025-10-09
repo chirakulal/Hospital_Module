@@ -23,10 +23,4 @@ public class HospitalDTO {
     private String password;
     private LocalDateTime time;
 
-    public static class TimeSlotDTO {
-
-        private int id;
-        private String timeSlot;
-
-    }
 }

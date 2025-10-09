@@ -39,8 +39,6 @@ public class SlotServiceIMpl implements SlotService {
         slotEntity.setSpecializationName(slotDTO.getSpecializationName());
         slotEntity.setStartTime(slotDTO.getStartTime());
         slotEntity.setEndTime(slotDTO.getEndTime());
-        slotEntity.setCreatedBy(slotDTO.getCreatedBy());
-        slotEntity.setCreatedAt(new java.sql.Timestamp(new java.util.Date().getTime()));
         boolean result = hospitalRepo.saveTimeSlots(slotEntity);
         log.info("Data saved in entity" + result);
         return result;

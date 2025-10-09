@@ -24,6 +24,7 @@
                 <span class="fw-bold fs-4 text-success font-Courier New">Healing Hands Hospital</span>
             </a>
             <div class="d-flex ms-auto">
+                <a href="AddSpecialization" class="btn btn-outline-success fw-semibold me-2">Add Specialization</a>
                 <a href="updateDetails" class="btn btn-outline-success fw-semibold me-2">Update Details</a>
                 <a href="dashboard-success" class="btn btn-outline-success fw-semibold">Back to Dashboard</a>
             </div>

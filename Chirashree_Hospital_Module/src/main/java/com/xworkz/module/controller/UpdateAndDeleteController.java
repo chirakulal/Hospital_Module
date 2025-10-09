@@ -88,8 +88,7 @@ public class UpdateAndDeleteController {
 
         log.info("Running saveUpdate in UpdateAndDeleteController");
         log.info("Received DoctorDTO: " + updateDTO);
-        String email= (String) httpSession.getAttribute("loginEmail");
-        updateDTO.setUpdatedBy(email);
+
         if (bindingResult.hasErrors()) {
             log.warn("Validation errors found: " + bindingResult.getAllErrors());
             modelAndView.addObject("error", "Validation errors occurred. Please correct the form.");

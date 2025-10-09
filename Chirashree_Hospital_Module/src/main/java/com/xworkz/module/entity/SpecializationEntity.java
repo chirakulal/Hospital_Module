@@ -17,7 +17,7 @@ import java.util.List;
 @Entity
 @Table(name = "specialization")
 @NamedQuery(name = "getAllSpecializations", query = "select e.specialization_name from SpecializationEntity e")
-public class SpecializationEntity {
+public class SpecializationEntity extends AuditEntity {
 
     @Id
     @Column(name = "id_specialization")
@@ -29,17 +29,6 @@ public class SpecializationEntity {
     @Size(min = 3, max = 50, message = "Specialization name must be between 3 and 50 characters")
     private String specialization_name;
 
-    @Column(name = "created_by")
-    private String createdBy;
-
-    @Column(name = "created_at")
-    private Timestamp createdAt;
-
-    @Column(name = "updated_by")
-    private String updatedBy;
-
-    @Column(name = "updated_at")
-    private Timestamp updatedAt;
 
 
 }

@@ -50,8 +50,5 @@ public class DoctorDTO {
 
     private String timeSlot;
 
-    private String createdBy;
-    private Timestamp createdAt;
-    private String updatedBy;
-    private Timestamp updatedAt;
+
 }

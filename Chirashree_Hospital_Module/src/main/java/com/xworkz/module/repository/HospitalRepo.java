@@ -56,9 +56,9 @@ List<String> getAllNames(String specialization);
 
     PatientEntity getPatientByEmail(String email);
 
-
-
     TimeSlotEntity getTImeSlotIdByTime(String time);
+
+
 
 
 

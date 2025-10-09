@@ -33,9 +33,9 @@
                     <li class="nav-item">
                         <a class="nav-link fw-semibold text-success" href="doctor">Doctor Details</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link fw-semibold text-success" href="AddSpecialization">AddSpecialisation</a>
-                    </li>
+<!--                    <li class="nav-item">-->
+<!--                        <a class="nav-link fw-semibold text-success" href="AddSpecialization">AddSpecialisation</a>-->
+<!--                    </li>-->
                     <li class="nav-item">
                         <a class="nav-link fw-semibold text-success" href="slot">Slot</a>
                     </li>

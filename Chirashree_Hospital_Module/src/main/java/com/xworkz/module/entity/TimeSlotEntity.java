@@ -14,7 +14,7 @@ import javax.persistence.*;
 @NamedQuery(name = "TimeSlotEntity.getTimeSlotIdByTime",
         query = "Select t from TimeSlotEntity t where timeSlot=:timeSlot"
 )
-public class TimeSlotEntity {
+public class TimeSlotEntity extends AuditEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -23,10 +23,7 @@ public class SpecializationServiceImpl implements SpecializationService{
     public boolean saveSpecialization(SpecializationDTO specializationDTO) {
         SpecializationEntity specializationEntity = new SpecializationEntity();
         specializationEntity.setSpecialization_name(specializationDTO.getName());
-        specializationEntity.setCreatedBy(specializationDTO.getCreatedBy());
-        specializationEntity.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        specializationEntity.setUpdatedBy(specializationDTO.getUpdatedBy());
-        specializationEntity.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+
         return hospitalRepo.saveSpecializationData(specializationEntity) ; // Return true if saved successfully
     }
     @Override

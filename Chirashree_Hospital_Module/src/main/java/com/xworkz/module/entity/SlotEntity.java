@@ -19,7 +19,7 @@ import java.time.LocalTime;
                 "FROM SlotEntity s " +
                 "WHERE s.specializationName = :specializationName"
 )
-public class SlotEntity {
+public class SlotEntity extends AuditEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_slot")
@@ -34,9 +34,6 @@ public class SlotEntity {
     @Column(nullable = false)
     private LocalTime endTime;
 
-    private String createdBy;
-    private Timestamp createdAt;
-    private String updatedBy;
-    private Timestamp updatedAt;
+
 
 }

@@ -1,10 +1,8 @@
 package com.xworkz.module.controller;
 
 import com.xworkz.module.dto.DoctorDTO;
-import com.xworkz.module.dto.ImageDTO;
 import com.xworkz.module.service.DoctorDetailsService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -18,9 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+
 
 @Slf4j
 @Controller
@@ -50,10 +46,7 @@ public class DoctorDetailsController {
         log.info("Received file: " + file.getOriginalFilename());
         log.info("File size: " + file.getSize());
         log.info("Doctor DTO: " + doctorDTO);
-        String email= (String) httpSession.getAttribute("loginEmail");
-        doctorDTO.setCreatedBy(email);
-        ImageDTO imageDTO=new ImageDTO();
-        imageDTO.setCreatedBy(email);
+
 
 
         if (bindingResult.hasErrors()) {

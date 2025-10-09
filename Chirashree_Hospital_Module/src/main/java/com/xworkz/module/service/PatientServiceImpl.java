@@ -6,9 +6,12 @@ import com.xworkz.module.entity.DoctorEntity;
 import com.xworkz.module.entity.PatientEntity;
 import com.xworkz.module.entity.TimeSlotEntity;
 import com.xworkz.module.repository.HospitalRepo;
+import com.xworkz.module.service.email.EmailService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import javax.validation.constraints.Email;
 
 
 @Service
@@ -24,6 +27,9 @@ public class PatientServiceImpl implements PatientService {
 
     @Autowired
     private DoctorDetailsService doctorDetailsService;
+
+    @Autowired
+    private EmailService emailService;
 
     @Override
     public boolean savePatientData(PatientDTO patientDTO) {
@@ -55,6 +61,8 @@ public class PatientServiceImpl implements PatientService {
 
         if (result) {
             log.info("Patient data saved successfully");
+           emailService.sendPatientAppointmentEmail(patientEntity);
+           
             return true;
         }
 

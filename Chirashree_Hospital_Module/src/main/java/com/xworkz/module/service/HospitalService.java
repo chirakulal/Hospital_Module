@@ -24,4 +24,6 @@ public interface HospitalService {
 //
 //
     int countDoctorEmail(String email);
+
+    void clearUnusedOtps();
 }

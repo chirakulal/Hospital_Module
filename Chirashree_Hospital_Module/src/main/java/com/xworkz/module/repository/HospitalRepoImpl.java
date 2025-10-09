@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
@@ -93,6 +94,8 @@ public class HospitalRepoImpl implements HospitalRepo {
 
         return update;
     }
+
+
 
     @Override
     public HospitalEntity getEmail(String email) {
@@ -496,8 +499,7 @@ return null;
                 doctorEntity1.setExperience(doctorEntity.getExperience());
                 doctorEntity1.setAddress(doctorEntity.getAddress());
                 doctorEntity1.setGender(doctorEntity.getGender());
-                doctorEntity1.setUpdatedBy(doctorEntity.getUpdatedBy());
-                doctorEntity1.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+
                 ImageEntity imageEntity = new ImageEntity();
                 // --- Handle Profile Image ---
                 if (file != null && !file.isEmpty()) {
@@ -519,8 +521,6 @@ return null;
                     imageEntity.setFilePath(filePath.toString());
                     imageEntity.setSavedName(fileName);
                     imageEntity.setDateTime(new Timestamp(System.currentTimeMillis()));
-                    imageEntity.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-                    imageEntity.setUpdatedBy(doctorEntity.getUpdatedBy());
 
                     // Associate with doctor
                     doctorEntity1.setProfilePicture(imageEntity);

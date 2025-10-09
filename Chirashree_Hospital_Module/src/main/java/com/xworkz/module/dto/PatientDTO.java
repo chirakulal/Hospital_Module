@@ -2,9 +2,7 @@ package com.xworkz.module.dto;
 
 import com.xworkz.module.entity.DoctorEntity;
 import com.xworkz.module.entity.TimeSlotEntity;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -15,10 +13,12 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
+@ToString(exclude = {"doctor", "slot"})
+@Slf4j
 public class PatientDTO {
     // First Name: Not Null, Min/Max size
     @NotBlank(message = "First name is required.")

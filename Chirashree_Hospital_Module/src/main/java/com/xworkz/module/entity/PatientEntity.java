@@ -19,7 +19,7 @@ import static com.xworkz.module.dto.RegistrationIdGenerator.generateRandomNumeri
 @NamedQuery(
         name = "PatientEntity.getByEmail",
         query = "select  e from PatientEntity e where e.email=:email")
-public class PatientEntity {
+public class PatientEntity extends AuditEntity{
 
     @Id
     @Column(name = "id_patient")

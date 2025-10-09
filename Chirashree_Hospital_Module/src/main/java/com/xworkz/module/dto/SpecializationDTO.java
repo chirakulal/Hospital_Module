@@ -21,9 +21,6 @@ public class SpecializationDTO {
     @NotNull(message = "Specialization name should not be empty")
     @Size(min = 3, max = 50, message = "Specialization name must be between 3 and 50 characters")
     private String name;
-    private String createdBy;
-    private Timestamp createdAt;
-    private String updatedBy;
-    private Timestamp updatedAt;
+
 
 }

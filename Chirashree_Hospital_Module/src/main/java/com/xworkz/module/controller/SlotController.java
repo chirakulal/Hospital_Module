@@ -37,8 +37,7 @@ public class SlotController {
     @PostMapping("saveTime")
     public ModelAndView saveTimeSlots(ModelAndView modelAndView, SlotDTO slotDTO,HttpSession httpSession){
         log.info("Running saveTimeSlots in controller");
-        String email= (String) httpSession.getAttribute("loginEmail");
-        slotDTO.setCreatedBy(email);
+
         boolean result =   slotservice.saveTimeSlot(slotDTO);
         if(result){
             modelAndView.addObject("success", "TimeSlot is saved");

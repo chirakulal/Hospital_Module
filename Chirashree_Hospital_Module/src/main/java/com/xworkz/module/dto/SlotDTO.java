@@ -29,9 +29,6 @@ public class SlotDTO {
 
 
 
-    private String createdBy;
-    private Timestamp createdAt;
-    private String updatedBy;
-    private Timestamp updatedAt;
+
 
 }

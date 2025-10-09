@@ -78,8 +78,7 @@ public class DoctorDetailsServiceImpl implements DoctorDetailsService {
         imageEntity.setFilePath(filePath.toString());
         imageEntity.setSavedName(fileName);
         imageEntity.setDateTime(new Timestamp(System.currentTimeMillis()));
-        imageEntity.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        imageEntity.setCreatedBy(doctorDTO.getCreatedBy()); // Assuming this is set by a security context
+
 
 
 
@@ -96,8 +95,6 @@ public class DoctorDetailsServiceImpl implements DoctorDetailsService {
         doctorEntity.setAddress(doctorDTO.getAddress());
         doctorEntity.setGender(doctorDTO.getGender());
         doctorEntity.setDegree(doctorDTO.getDegree());
-        doctorEntity.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-        doctorEntity.setCreatedBy(doctorDTO.getCreatedBy());
         doctorEntity.setProfilePicture(imageEntity);
 
 

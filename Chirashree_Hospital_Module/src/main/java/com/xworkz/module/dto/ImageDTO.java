@@ -1,12 +1,11 @@
 package com.xworkz.module.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.sql.Timestamp;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class ImageDTO {
@@ -18,8 +17,5 @@ public class ImageDTO {
     private String filePath;
     private Timestamp dateTime; // when the image was uploaded
     private String savedName;
-    private String createdBy;
-    private Timestamp createdAt;
-    private String updatedBy;
-    private Timestamp updatedAt;
+
 }

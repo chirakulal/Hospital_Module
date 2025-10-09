@@ -2,6 +2,7 @@ package com.xworkz.module.service;
 
 import com.xworkz.module.entity.HospitalEntity;
 import com.xworkz.module.repository.HospitalRepo;
+import com.xworkz.module.repository.SchedulerRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,9 @@ public class HospitalServiceImpl implements HospitalService {
 
     @Autowired
     private HospitalRepo hospitalRepo;
+
+    @Autowired
+    private SchedulerRepo schedulerRepo;
 
 
     @Override
@@ -89,6 +93,13 @@ public class HospitalServiceImpl implements HospitalService {
         }
         return false;
 
+    }
+
+    @Override
+    public void clearUnusedOtps() {
+        LocalDateTime expiryTime = LocalDateTime.now().minusMinutes(2); // OTP older than 2 min
+        schedulerRepo.clearExpiredOtps(expiryTime);
+        log.info("Expired OTPs cleared automatically at {}", LocalDateTime.now());
     }
 
     @Override

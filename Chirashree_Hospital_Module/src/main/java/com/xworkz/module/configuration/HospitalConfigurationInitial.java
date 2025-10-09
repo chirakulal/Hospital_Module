@@ -17,7 +17,7 @@ public class HospitalConfigurationInitial extends AbstractAnnotationConfigDispat
 
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return new Class[]{HospitalConfiguration.class};
+        return new Class[]{HospitalConfiguration.class, DatabaseConfig.class, AuditConfig.class};
     }
 
     @Override

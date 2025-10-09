@@ -21,9 +21,7 @@ public class SpecializationController {
 
     @PostMapping("specializations")
     public ModelAndView saveSpecialization(ModelAndView modelAndView, SpecializationDTO specialization, HttpSession httpSession){
-        String email= (String) httpSession.getAttribute("loginEmail");
-        specialization.setCreatedBy(email);
-        specialization.setUpdatedBy(email);
+
         boolean isSaved=specializationService.saveSpecialization(specialization);
         if(isSaved){
             modelAndView.addObject("success","Specialization added successfully");

@@ -6,6 +6,7 @@ import com.xworkz.module.service.SpecializationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -159,7 +160,10 @@ public class HospitalController {
     }
 
 
-
+    @Scheduled(fixedRate = 50000)
+    public void task() {
+        System.out.println("Scheduler running... " + System.currentTimeMillis());
+    }
 
 
 }

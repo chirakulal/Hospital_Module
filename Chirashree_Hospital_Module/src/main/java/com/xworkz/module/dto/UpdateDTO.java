@@ -1,15 +1,15 @@
 package com.xworkz.module.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.*;
 import java.sql.Timestamp;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
+@ToString(exclude = "images")
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateDTO {
@@ -54,9 +54,6 @@ public class UpdateDTO {
 
     private String timeSlot;
 
-    private String createdBy;
-    private Timestamp createdAt;
-    private String updatedBy;
-    private Timestamp updatedAt;
+
 
 }

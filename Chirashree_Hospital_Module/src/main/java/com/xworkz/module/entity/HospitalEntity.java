@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @NamedQuery(name = "HospitalEntity.updateOtp",query = "update HospitalEntity e set e.otp=:otp , e.time=:time where e.email =:email")
 @NamedQuery(name = "countEmail",query = "select count(e.email) from HospitalEntity e where e.email=:email")
 
-public class HospitalEntity {
+public class HospitalEntity extends AuditEntity {
 
 
     @Id
