@@ -6,6 +6,7 @@ import com.xworkz.module.repository.SchedulerRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.Message;
 import javax.mail.PasswordAuthentication;
@@ -95,11 +96,11 @@ public class HospitalServiceImpl implements HospitalService {
 
     }
 
-    @Override
+    @Transactional
     public void clearUnusedOtps() {
         LocalDateTime expiryTime = LocalDateTime.now().minusMinutes(2); // OTP older than 2 min
         schedulerRepo.clearExpiredOtps(expiryTime);
-        log.info("Expired OTPs cleared automatically at {}", LocalDateTime.now());
+        log.info("Expired OTPs cleared automatically at {}", expiryTime);
     }
 
     @Override

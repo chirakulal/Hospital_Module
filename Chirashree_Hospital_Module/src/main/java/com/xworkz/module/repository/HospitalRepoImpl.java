@@ -16,6 +16,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -165,8 +166,9 @@ public class HospitalRepoImpl implements HospitalRepo {
             entityTransaction.begin();
             Query query = entityManager.createNamedQuery("getAllSpecializations");
             list = query.getResultList();
-
+            entityTransaction.commit();
             return list;
+
         } catch (Exception e) {
             if (entityTransaction != null && entityTransaction.isActive()) {
                 entityTransaction.rollback();
@@ -260,6 +262,31 @@ public class HospitalRepoImpl implements HospitalRepo {
     }
 
     @Override
+    public boolean isTimeSlotExist(String specializationName, LocalTime startTime, LocalTime endTime) {
+        EntityManager entityManager = null;
+        long count = 0;
+
+        try {
+            entityManager = entityManagerFactory.createEntityManager();
+            Query query = entityManager.createNamedQuery("checkTimeSlotExist");
+            query.setParameter("specName", specializationName);
+            query.setParameter("start", startTime);
+            query.setParameter("end", endTime);
+
+            count = (long) query.getSingleResult();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (entityManager != null) {
+                entityManager.close();
+            }
+        }
+
+        return count > 0; // ✅ Return true if slot exists
+    }
+
+    @Override
     public boolean saveTimeSlots(SlotEntity slotEntity) {
         EntityManager entityManager = null;
         EntityTransaction entityTransaction = null;
@@ -327,6 +354,7 @@ public class HospitalRepoImpl implements HospitalRepo {
             query.setParameter("specializationName",specialization);
            list =  query.getResultList();
            log.info("{}",list);
+           entityTransaction.commit();
             return list;
         }catch (Exception e){
             if(entityTransaction !=null && entityTransaction.isActive()){
@@ -338,6 +366,37 @@ public class HospitalRepoImpl implements HospitalRepo {
         }
         return list;
     }
+
+    @Override
+    public List<String> getAvailableTimeForDoctor(String specialization, int doctorId) {
+        if (entityManagerFactory == null) {
+            log.error("EntityManagerFactory is null!");
+            return new ArrayList<>();
+        }
+
+        EntityManager entityManager = null;
+        List<String> list = new ArrayList<>();
+
+        try {
+            entityManager = entityManagerFactory.createEntityManager();
+            Query query = entityManager.createNamedQuery("SlotEntity.getAvailableTimeForDoctor");
+            query.setParameter("spec", specialization);
+            query.setParameter("docId", doctorId);
+
+            list = query.getResultList();
+            log.info("Available slots: {}", list);
+
+        } catch (Exception e) {
+            log.error("Error fetching available time slots", e);
+        } finally {
+            if (entityManager != null && entityManager.isOpen()) {
+                entityManager.close();
+            }
+        }
+
+        return list;
+    }
+
 
     @Override
     public DoctorEntity findByFullName(String doctorName) {

@@ -49,10 +49,7 @@ public class HospitalConfiguration implements WebMvcConfigurer {
         return new PropertySourcesPlaceholderConfigurer();
     }
 
-    @Bean
-    public PlatformTransactionManager transactionManager(EntityManagerFactory emf) {
-        return new JpaTransactionManager(emf);
-    }
+
 
 
     @Bean(name = "multipartResolver")

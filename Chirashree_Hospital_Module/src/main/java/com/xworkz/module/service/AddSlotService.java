@@ -12,6 +12,8 @@ public interface AddSlotService {
     List<String> getAllNames(String specialization);
 
     List<String> getTime(String specialization);
-//
+
+    List<String> getAvailableTimeForDoctor(String specialization, String doctorName);
+    //
   boolean assignSlotToDoctor(String doctorName, String timeSlot);
 }

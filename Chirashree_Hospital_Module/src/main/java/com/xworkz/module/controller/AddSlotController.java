@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Controller
@@ -32,27 +34,30 @@ public class AddSlotController {
 
     @GetMapping("schedule")
     public ModelAndView SlotDetails(ModelAndView modelAndView, @RequestParam String specializationName){
-        List<String> doctorNames =addSlotService.getAllNames(specializationName);
+        List<String> doctorNames = addSlotService.getAllNames(specializationName);
 
-        List<String> timeList = addSlotService.getTime(specializationName);
+        Map<String, List<String>> doctorAvailableSlots = new HashMap<>();
+        for (String doctorName : doctorNames) {
+            List<String> availableSlots = addSlotService.getAvailableTimeForDoctor(specializationName, doctorName);
+            log.info("Doctor: {}, Available Slots: {}", doctorName, availableSlots);  // <-- Add this
+            doctorAvailableSlots.put(doctorName, availableSlots);
+        }
 
-        log.info("{}",doctorNames);
-        log.info("{}",timeList);
-        modelAndView.addObject("specializations",specializationService.getAllNames() );
+
+        modelAndView.addObject("specializations", specializationService.getAllNames());
         modelAndView.addObject("selectedSpec", specializationName);
+        modelAndView.addObject("doctorNames", doctorNames);
+        modelAndView.addObject("doctorAvailableSlots", doctorAvailableSlots);
+        modelAndView.addObject("scheduleClicked", !doctorNames.isEmpty());
 
-        if (doctorNames != null && !doctorNames.isEmpty()) {
-            modelAndView.addObject("doctorNames", doctorNames);
-            modelAndView.addObject("timeList", timeList);
-            modelAndView.addObject("scheduleClicked", true);
-        } else {
+        if (doctorNames.isEmpty()) {
             modelAndView.addObject("error", "No doctors available for " + specializationName);
-            modelAndView.addObject("scheduleClicked", false);
         }
 
         modelAndView.setViewName("AddSlot");
         return modelAndView;
     }
+
 
 
     @PostMapping("saveSlot")

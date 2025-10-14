@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 
@@ -27,14 +28,17 @@ public interface HospitalRepo {
 //    Long countLastName(String lastName);
 //
      Long countPhoneNumber(long phone);
+
+     boolean isTimeSlotExist(String specializationName, LocalTime startTime,LocalTime endTime);
 //
    boolean saveTimeSlots(SlotEntity slotEntity);
 //
 List<String> getAllNames(String specialization);
 //
        List<String> getTime(String specialization);
+     List<String> getAvailableTimeForDoctor(String specialization, int doctorId);
 
-       DoctorEntity findByFullName(String doctorName);
+    DoctorEntity findByFullName(String doctorName);
 //
    boolean assignSlotToDoctor(TimeSlotEntity timeSlotEntity);
 //

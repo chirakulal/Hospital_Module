@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalTime;
 import java.util.Collections;
 import java.util.List;
 
@@ -32,9 +33,15 @@ public class SlotServiceIMpl implements SlotService {
             return Collections.emptyList(); // Return an empty list instead of null
         }
     }
+    @Override
+    public boolean checkSlotExist(String specialization, LocalTime startTime, LocalTime endTime) {
+        return hospitalRepo.isTimeSlotExist(specialization,startTime,endTime);
+    }
+
 
     @Override
     public boolean saveTimeSlot(SlotDTO slotDTO) {
+
         SlotEntity slotEntity = new SlotEntity();
         slotEntity.setSpecializationName(slotDTO.getSpecializationName());
         slotEntity.setStartTime(slotDTO.getStartTime());

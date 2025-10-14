@@ -54,13 +54,13 @@ public class HospitalController {
                 log.info("OTP sent to {}", email);
 
             } else {
-                modelAndView.addObject("error", "Failed to send OTP.");
+                modelAndView.addObject("emailError", "Failed to send OTP.");
                 modelAndView.addObject("email",email);
                 modelAndView.setViewName("AdminLogin");
             }
         } catch (Exception e) {
             log.error("Error while sending OTP", e);
-            modelAndView.addObject("error", "Failed to send OTP.");
+            modelAndView.addObject("emailError", "Failed to send OTP.");
             modelAndView.addObject("email",email);
             modelAndView.setViewName("AdminLogin");
         }

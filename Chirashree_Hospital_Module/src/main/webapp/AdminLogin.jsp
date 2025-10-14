@@ -1,6 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page isELIgnored="false" %>
-<html lang="en">
+<html lang="en" xmlns:c="http://www.w3.org/1999/XSL/Transform">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -40,19 +40,18 @@
                            placeholder="Enter your email" oninput="validateEmail()" onchange="checkEmail()" value="${dto.email}" required>
 
                 </div>
-                <div id="emailError" class="form-text text-danger"></div>
 
+                <div id="messageArea">
+                    <c:if test="${not empty emailError}">
+                        <div class="form-text text-danger mt-1">${emailError}</div>
+                    </c:if>
+                    <c:if test="${not empty success}">
+                        <div class="form-text text-success mt-1">${success}</div>
+                    </c:if>
+                </div>
             </div>
 
-            <!-- Error Message -->
-            <c:if test="${not empty error}">
-                <div class="alert alert-danger py-2 mb-2">${error}</div>
-            </c:if>
 
-            <!-- Success Message -->
-            <c:if test="${not empty success}">
-                <div class="alert alert-success py-2 mb-2">${success}</div>
-            </c:if>
 
             <button type="submit" class="btn btn-success w-100 fw-semibold">Send OTP</button>
         </form>
@@ -72,29 +71,54 @@
     </div>
 </footer>
 <script>
-    function validateEmail(){
-        let email = document.getElementById("email").value;
-        let error = document.getElementById("emailError");
 
+    const messageArea = document.getElementById("messageArea");
+    const emailField = document.getElementById("email");
+
+    function validateEmail(){
+        let email = emailField.value;
         let pattern = /^[A-Za-z0-9._%+-]+@gmail\.com$/;
 
+
+        messageArea.innerHTML = "";
+        emailField.setCustomValidity("");
+
         if(!pattern.test(email)){
-            error.textContent = "Please enter valid email :(eg: user@gmail.com)";
-        } else {
-            error.textContent = "";
+
+            messageArea.innerHTML = '<div class="form-text text-danger mt-1">Please enter valid email (eg: user@gmail.com)</div>';
+
+
+            emailField.setCustomValidity("Invalid email format.");
         }
+
     }
 
     function checkEmail(){
-        let email = document.getElementById("email").value;
-        let emailError = document.getElementById("emailError");
+        let email = emailField.value;
+
+
+        validateEmail();
+
+
+        if (emailField.checkValidity() === false) {
+             return;
+        }
+
 
         const xhttp = new XMLHttpRequest();
+
         xhttp.open("GET","http://localhost:8080/Chirashree_Hospital_Module/checkEmail/"+email, true);
         xhttp.send();
 
         xhttp.onload = function(){
-            emailError.innerHTML = this.responseText;
+
+            messageArea.innerHTML = "";
+
+
+            if (this.responseText.trim() !== "") {
+
+                messageArea.innerHTML = '<div class="form-text text-danger mt-1">' + this.responseText + '</div>';
+            }
         }
     }
 </script>

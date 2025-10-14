@@ -19,6 +19,14 @@ import java.time.LocalTime;
                 "FROM SlotEntity s " +
                 "WHERE s.specializationName = :specializationName"
 )
+@NamedQuery(
+        name = "SlotEntity.getAvailableTimeForDoctor",
+        query = "SELECT CONCAT(s.startTime, '--', s.endTime) " +
+                "FROM SlotEntity s " +
+                "WHERE s.specializationName = :spec " +
+                "AND CONCAT(s.startTime, '--', s.endTime) NOT IN " +
+                "(SELECT ts.timeSlot FROM TimeSlotEntity ts WHERE ts.doctor.id = :docId)"
+)
 public class SlotEntity extends AuditEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

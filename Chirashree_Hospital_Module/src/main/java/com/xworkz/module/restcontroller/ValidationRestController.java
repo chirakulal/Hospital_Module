@@ -1,16 +1,21 @@
 package com.xworkz.module.restcontroller;
 
 import com.xworkz.module.dto.DoctorDTO;
+import com.xworkz.module.dto.SlotDTO;
 import com.xworkz.module.service.DoctorDetailsService;
 import com.xworkz.module.service.HospitalService;
+import com.xworkz.module.service.SlotService;
 import com.xworkz.module.service.UpdateDetailsServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/")
@@ -27,6 +32,9 @@ public class ValidationRestController {
 
     @Autowired
     private UpdateDetailsServiceImpl updateDetailsService;
+
+    @Autowired
+    private SlotService service;
 
     @GetMapping("checkEmail/{email}")
     public String checkEmailCount(@PathVariable String email){
@@ -49,24 +57,33 @@ public class ValidationRestController {
 //    }
 //
 //
-    @GetMapping("CheckPhoneNumber/{CheckPhoneNumber}")
-    public String checkPhoneNUmber(@PathVariable long CheckPhoneNumber){
-        log.info("{}",CheckPhoneNumber);
-        int count = hospitalService.countPhoneNumber(CheckPhoneNumber);
-        log.info(String.valueOf(count));
-        if(count==0) return "";
-        else return "Phone Number already exist";
-
+@GetMapping(value = {"CheckPhoneNumber", "CheckPhoneNumber/{CheckPhoneNumber}"})
+@ResponseBody
+public String checkPhoneNumber(@PathVariable(required = false) Long CheckPhoneNumber) {
+    if (CheckPhoneNumber == null) {
+        return ""; // No number entered, skip DB call
     }
-    @GetMapping("checkDoctorEmail/{email}")
-    public String checkDoctorEmailCount(@PathVariable String email){
-        log.info(email);
+
+    log.info("Checking phone number: {}", CheckPhoneNumber);
+
+    int count = hospitalService.countPhoneNumber(CheckPhoneNumber);
+    log.info("Count: {}", count);
+
+    return count == 0 ? "" : "Phone Number already exist";
+}
+
+    @GetMapping(value = {"checkDoctorEmail", "checkDoctorEmail/{email}"})
+    @ResponseBody
+    public String checkDoctorEmailCount(@PathVariable(required = false) String email) {
+        if (email == null || email.trim().isEmpty()) {
+            return ""; // just return empty, don't check DB
+        }
+
+        log.info("Checking email: {}", email);
         int count = hospitalService.countDoctorEmail(email);
-        log.info(String.valueOf(count));
-        if(count==1) return "Email already exist";
-        else return " ";
-
+        return count > 0 ? "Email already exist" : "";
     }
+
 
     @GetMapping("fetchDoctor/{specialization}")
     @ResponseBody
@@ -109,4 +126,18 @@ public class ValidationRestController {
         log.info("Returning time slot string: {}", resultString);
         return resultString;
     }
+
+    @PostMapping("/api/slot/check")
+    public String checkTimeSlotExist(
+            @RequestParam String specializationName,
+            @RequestParam String startTime,
+            @RequestParam String endTime) {
+
+        LocalTime start = LocalTime.parse(startTime);
+        LocalTime end = LocalTime.parse(endTime);
+
+        boolean exists = service.checkSlotExist(specializationName, start, end);
+        return exists ? "exists" : "not_exists";
+    }
+
 }

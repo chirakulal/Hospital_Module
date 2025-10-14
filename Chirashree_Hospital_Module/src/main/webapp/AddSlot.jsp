@@ -88,16 +88,30 @@
                             </c:forEach>
                         </select>
                     </div>
+                    <c:forEach var="doctor" items="${doctorNames}">
+                        <div class="mb-3">
+                            <label for="timeSlot_${doctor}" class="form-label fw-semibold">
+                                Select Time Slot for Dr. ${doctor}:
+                            </label>
 
-                    <div class="mb-3">
-                        <label for="timeSlot" class="form-label fw-semibold">Select Time Slot:</label>
-                        <select class="form-select shadow-sm" id="timeSlot" name="timeSlot" required>
-                            <option value="">Select Time</option>
-                            <c:forEach var="time" items="${timeList}">
-                                <option value="${time}">${time}</option>
-                            </c:forEach>
-                        </select>
-                    </div>
+                            <c:set var="slots" value="${doctorAvailableSlots[doctor]}" />
+
+                            <c:choose>
+                                <c:when test="${empty slots}">
+                                    <p class="text-danger">No available slots.</p>
+                                </c:when>
+
+                                <c:otherwise>
+                                    <select class="form-select shadow-sm" id="timeSlot_${doctor}" name="timeSlot_${doctor}" required>
+                                        <option value="">Select Time</option>
+                                        <c:forEach var="time" items="${slots}">
+                                            <option value="${time}">${time}</option>
+                                        </c:forEach>
+                                    </select>
+                                </c:otherwise>
+                            </c:choose>
+                        </div>
+                    </c:forEach>
 
                     <div class="d-flex justify-content-center">
                         <button type="submit" class="btn btn-success px-4">Save Slot</button>

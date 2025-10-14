@@ -1,32 +1,56 @@
-function validateEmail(){
-    let email = document.getElementById("email").value;
-    let error = document.getElementById("emailError");
+function validateEmail() {
+    const emailInput = document.getElementById("email");
+    const email = emailInput.value.trim();
+    const emailError = document.getElementById("emailError");
+    const pattern = /^[A-Za-z0-9._%+-]+@gmail\.com$/;
 
-    let pattern = /^[A-Za-z0-9._%+-]+@gmail\.com$/;
+    emailError.textContent = ""; // reset error
 
-    if(!pattern.test(email)){
-        error.textContent = "Please enter valid email :(eg: user@gmail.com)";
-    } else {
-        error.textContent = "";
+    if (email === "") {
+        return false;
     }
+
+    if (!pattern.test(email)) {
+        emailError.textContent = "Please enter a valid Gmail address (e.g., user@gmail.com)";
+        return false;
+    }
+
+    return true; // valid
+}
+
+function checkDoctorEmail() {
+    const emailInput = document.getElementById("email");
+    const email = emailInput.value.trim();
+    const emailError = document.getElementById("emailError");
+
+    // ✅ Stop here if field is empty
+    if (email === "") {
+        emailError.textContent = "";
+        return; // No backend call
+    }
+
+    // ✅ Stop here if invalid Gmail
+    const pattern = /^[A-Za-z0-9._%+-]+@gmail\.com$/;
+    if (!pattern.test(email)) {
+        emailError.textContent = "Please enter a valid Gmail address (e.g., user@gmail.com)";
+        return;
+    }
+
+    // ✅ Encode and call backend safely
+    const encodedEmail = encodeURIComponent(email);
+    const xhttp = new XMLHttpRequest();
+    xhttp.open("GET", `http://localhost:8080/Chirashree_Hospital_Module/checkDoctorEmail/${encodedEmail}`, true);
+
+    xhttp.onload = function () {
+        const responseText = this.responseText.trim();
+        emailError.textContent = responseText;
+    };
+
+    xhttp.send();
 }
 
 
-function checkDoctorEmail(){
-let email = document.getElementById("email").value;
-let emailError = document.getElementById("emailError");
 
-const xhttp = new XMLHttpRequest();
-
-xhttp.open("GET","http://localhost:8080/Chirashree_Hospital_Module/checkDoctorEmail/"+email);
-xhttp.send();
-
-xhttp.onload=function(){
-emailError.innerHTML=this.responseText;
-}
-
-
-}
 function validateFirstName() {
     let firstname = document.getElementById("firstName");
     let error = document.getElementById("firstnameError");
@@ -99,14 +123,15 @@ function validateFirstName() {
 //}
 
   function validatePhone() {
-      let phone = document.getElementById("phone");
+      let phoneInput = document.getElementById("phone");
       let error = document.getElementById("phoneError");
-      let regex = /^[6-9][0-9]{9}$/;  // starts with 6–9 and has total 10 digits
+      let regex = /^[6-9][0-9]{9}$/;
 
-      // Remove all non-digit characters (if user types spaces, +91, etc.)
-      phone.value = phone.value.replace(/\D/g, '');
+      // Remove all non-digit characters
+      phoneInput.value = phoneInput.value.replace(/\D/g, '');
+      let phone = phoneInput.value;
 
-      if (!regex.test(phone.value)) {
+      if (!regex.test(phone)) {
           error.textContent = "Phone number must start with 6-9 and be exactly 10 digits";
           return false;
       } else {
@@ -116,20 +141,52 @@ function validateFirstName() {
   }
 
 
+  function CheckPhoneNumber() {
+      const phoneInput = document.getElementById("phone");
+      const phoneNumber = phoneInput.value.trim();
+      const error = document.getElementById("phoneError");
 
-    function CheckPhoneNumber(){
-    let phoneNumber = document.getElementById("phone").value;
-    let error = document.getElementById("phoneError");
+      // ✅ Reset previous error
+      error.textContent = "";
 
-    const xhttp = new XMLHttpRequest();
+      // ✅ Step 1: Stop if empty
+      if (phoneNumber === "") {
+          return;
+      }
 
-    xhttp.open("GET","http://localhost:8080/Chirashree_Hospital_Module/CheckPhoneNumber/"+phoneNumber);
-    xhttp.send();
+      // ✅ Step 2: Validate phone (assuming 10-digit numbers)
+      const pattern = /^[6-9]\d{9}$/;
+      if (!pattern.test(phoneNumber)) {
+          error.textContent = "Please enter a valid 10-digit phone number";
+          return;
+      }
 
-    xhttp.onload = function(){
-    error.innerHTML = this.responseText;
-    }
-    }
+      // ✅ Step 3: Encode and prepare request
+      const encodedPhone = encodeURIComponent(phoneNumber);
+      const url = "http://localhost:8080/Chirashree_Hospital_Module/CheckPhoneNumber/" + encodedPhone;
+
+      const xhttp = new XMLHttpRequest();
+      xhttp.open("GET", url, true);
+      xhttp.send();
+
+      // ✅ Step 4: Handle response
+      xhttp.onload = function () {
+          const responseText = this.responseText.trim();
+          if (responseText !== "") {
+              error.textContent = responseText;
+          } else {
+              error.textContent = "";
+          }
+      };
+  }
+
+
+
+
+
+
+
+
 
 
       function validateExperience() {

@@ -47,7 +47,7 @@
                             <div class="col-12">
 
                                     <label for="specialization" class="form-label fw-semibold">Specialization</label>
-                                    <select class="form-select shadow-sm" id="specialization" name="specializationName" required>
+                                    <select class="form-select shadow-sm" id="specialization" name="specializationName" required onchange="CheckTimeSlot()">
                                         <option value="">Choose...</option>
                                         <c:forEach var="spec" items="${specialization}">
                                             <option value="${spec}">${spec}</option>
@@ -59,20 +59,21 @@
                         <div class="row g-3 mt-3">
                             <div class="col-md-6">
                                 <label for="startTime" class="form-label fw-semibold">Start Time:</label>
-                                <input type="time" class="form-control shadow-sm" id="startTime" name="startTime" required>
+                                <input type="time" class="form-control shadow-sm" id="startTime" name="startTime" required onchange="CheckTimeSlot()">
                             </div>
                             <div class="col-md-6">
                                 <label for="endTime" class="form-label fw-semibold">End Time:</label>
-                                <input type="time" class="form-control shadow-sm" id="endTime" name="endTime" required>
+                                <input type="time" class="form-control shadow-sm" id="endTime" name="endTime" required onchange="CheckTimeSlot()">
                             </div>
                         </div>
 
                         <div class="d-grid mt-4">
-                            <button type="submit" class="btn btn-success btn-lg shadow-sm">
+                            <button type="submit" id="saveBtn" class="btn btn-success btn-lg shadow-sm">
                                 Post New Time Slot
                             </button>
                         </div>
                     </form>
+                    <div id="message"></div>
 
                     <c:if test="${not empty error}">
                         <div class="alert alert-danger mt-3 text-center shadow-sm">${error}</div>
@@ -97,4 +98,41 @@
         crossorigin="anonymous"></script>
 
 </body>
+<script>
+    function CheckTimeSlot() {
+        let specialization = document.getElementById("specialization").value;
+        let start = document.getElementById("startTime").value;
+        let end = document.getElementById("endTime").value;
+        let message = document.getElementById("message");
+        let saveBtn = document.getElementById("saveBtn");
+
+        message.innerHTML = "";
+        if (!specialization || !start || !end) return;
+
+        const xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState === 4 && this.status === 200) {
+                const response = this.responseText.trim();
+                if (response === "exists") {
+                    message.innerHTML = "<div class='alert alert-danger text-center mt-3 shadow-sm'> Time slot already exists!</div>";
+                    saveBtn.disabled = true;
+                } else {
+                    message.innerHTML = "";
+                    saveBtn.disabled = false;
+                }
+            }
+        };
+
+        xhttp.open("POST", "/Chirashree_Hospital_Module/api/slot/check", true);
+        xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+        // JavaScript: encode values properly
+        const params =
+            "specializationName=" + encodeURIComponent(specialization) +
+            "&startTime=" + encodeURIComponent(start) +
+            "&endTime=" + encodeURIComponent(end);
+
+        xhttp.send(params);
+    }
+</script>
 </html>

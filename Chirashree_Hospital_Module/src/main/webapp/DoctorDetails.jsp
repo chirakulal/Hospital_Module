@@ -78,7 +78,8 @@
             <div class="col-md-6">
                 <label for="email" class="form-label fw-semibold">Email</label>
                 <input type="email" class="form-control shadow-sm" id="email" name="email"
-                       oninput="validateEmail()" onchange="checkDoctorEmail()" value="${dto.email}" placeholder="doctor@example.com" required>
+                       oninput="validateEmail(); checkDoctorEmail();"
+                       value="${dto.email}" placeholder="doctor@example.com" required>
                 <div id="emailError" class="form-text text-danger"></div>
             </div>
 

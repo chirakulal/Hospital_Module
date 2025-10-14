@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -34,6 +35,15 @@ public class AddSlotServiceImpl implements AddSlotService {
     @Override
     public List<String> getTime(String specialization) {
         return hospitalRepo.getTime(specialization);
+    }
+
+    // In service implementation
+    @Override
+    public List<String> getAvailableTimeForDoctor(String specialization, String doctorName) {
+        DoctorEntity doctor = hospitalRepo.findByFullName(doctorName); // Assumes hospitalRepo is used to find doctor
+        if (doctor == null) return Collections.emptyList();
+        // Calls the repository method with a long for doctorId
+        return hospitalRepo.getAvailableTimeForDoctor(specialization, doctor.getId());
     }
 
     @Override

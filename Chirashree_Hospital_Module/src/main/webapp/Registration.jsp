@@ -145,6 +145,19 @@
                 <input type="number" id="fees" name="fees" class="form-control" placeholder="Enter amount" required>
             </div>
 
+            <div class="col-4">
+                <label for="patientProfilePhotoId" class="form-label fw-semibold" >Choose Profile Photo</label>
+                <input class="form-control" type="file" id="patientProfilePhotoId" name="profile" accept="image/*" >
+            </div>
+
+
+            <div class="col-4">
+                <label for="symptomsPhoto" class="form-label fw-semibold" >Choose Symptoms Photo</label>
+                <input class="form-control" type="file" id="symptomsPhoto" multiple  name="symptomsImage" accept="image/*">
+                <span class="text-warning small" id="imageErrorId"></span>
+            </div>
+
+
             <!-- Submit Button -->
             <div class="text-center">
                 <button type="submit" class="btn btn-success px-4">Register</button>

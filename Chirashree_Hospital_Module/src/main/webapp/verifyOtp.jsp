@@ -45,12 +45,12 @@
 
             <!-- Error Message -->
             <c:if test="${not empty error}">
-                <div class="alert alert-danger py-2 mb-2">${error}</div>
+                <div class="form-text text-danger mt-1">${error}</div>
             </c:if>
 
             <!-- Success Message -->
             <c:if test="${not empty success}">
-                <div class="alert alert-success py-2 mb-2">${success}</div>
+                <div class="form-text text-success mt-1">${success}</div>
             </c:if>
 
             <button type="submit" class="btn btn-success w-100 fw-semibold mb-2">Login</button>
