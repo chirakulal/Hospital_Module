@@ -34,7 +34,7 @@ public class ValidationRestController {
     private UpdateDetailsServiceImpl updateDetailsService;
 
     @Autowired
-    private SlotService service;
+    private SlotService slotservice;
 
     @GetMapping("checkEmail/{email}")
     public String checkEmailCount(@PathVariable String email){
@@ -59,7 +59,7 @@ public class ValidationRestController {
 //
 @GetMapping(value = {"CheckPhoneNumber", "CheckPhoneNumber/{CheckPhoneNumber}"})
 @ResponseBody
-public String checkPhoneNumber(@PathVariable(required = false) Long CheckPhoneNumber) {
+public String checkPhoneNumber(@PathVariable(required = false) String CheckPhoneNumber) {
     if (CheckPhoneNumber == null) {
         return ""; // No number entered, skip DB call
     }
@@ -136,7 +136,7 @@ public String checkPhoneNumber(@PathVariable(required = false) Long CheckPhoneNu
         LocalTime start = LocalTime.parse(startTime);
         LocalTime end = LocalTime.parse(endTime);
 
-        boolean exists = service.checkSlotExist(specializationName, start, end);
+        boolean exists = slotservice.checkSlotExist(specializationName, start, end);
         return exists ? "exists" : "not_exists";
     }
 

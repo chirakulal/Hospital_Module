@@ -7,6 +7,8 @@ import javax.persistence.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.xworkz.module.dto.RegistrationIdGenerator.generateRandomNumeric;
 
@@ -19,6 +21,19 @@ import static com.xworkz.module.dto.RegistrationIdGenerator.generateRandomNumeri
 @NamedQuery(
         name = "PatientEntity.getByEmail",
         query = "select  e from PatientEntity e where e.email=:email")
+@NamedQuery(
+                name = "PatientEntity.findByRegistrationId",
+                query = "SELECT p FROM PatientEntity p WHERE p.registrationId = :regId"
+        )
+
+@NamedQuery(
+        name = "PatientEntity.countPhoneNumber",
+        query = "SELECT COUNT(p.phone) FROM PatientEntity p WHERE p.phone = :phone"
+)
+@NamedQuery(
+        name = "PatientEntity.countByEmail",  // Renamed to avoid duplicate
+        query = "SELECT COUNT(p.email) FROM PatientEntity p WHERE p.email=:email"
+)
 public class PatientEntity extends AuditEntity{
 
     @Id
@@ -37,7 +52,7 @@ public class PatientEntity extends AuditEntity{
     private String lastName;
 
     @Column(name = "phone_number", unique = true, nullable = false)
-    private Long phone;
+    private String phone;
 
     @Column(name = "email", unique = true, nullable = false)
     private String email;
@@ -76,6 +91,12 @@ public class PatientEntity extends AuditEntity{
     @Column(name = "fees")
     private Double fees;
 
+    @OneToOne(mappedBy = "patientEntity",cascade = CascadeType.ALL,orphanRemoval = true)
+    private PatientProfileEntity patientProfileEntity;
+
+
+    @OneToMany(mappedBy = "patientEntity",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.EAGER)
+    private List<PatientSymptomsEntity> patientSymtomsImageEntityList=new ArrayList<>();
 
 
     @PrePersist

@@ -12,6 +12,7 @@ import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -33,7 +34,7 @@ public class PatientDTO {
     // Phone: Not Null, Pattern for digit count (e.g., 10 digits)
     @NotNull(message = "Phone number is required.")
     @Digits(integer = 10, fraction = 0, message = "Phone number must be exactly 10 digits.")
-    private Long phone;
+    private String phone;
 
     // Email: Not Null, Valid Email format
     @NotBlank(message = "Email is required.")
@@ -77,5 +78,8 @@ public class PatientDTO {
     @Min(value = 0, message = "Fees cannot be negative.")
     private Double fees;
 
+    private String image;
+
+    private List<String> symptomImage;
 
 }

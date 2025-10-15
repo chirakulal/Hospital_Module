@@ -236,7 +236,7 @@ public class HospitalRepoImpl implements HospitalRepo {
 //    }
 //
     @Override
-    public Long countPhoneNumber(long phone) {
+    public Long countPhoneNumber(String phone) {
         EntityManager entityManager=null;
         EntityTransaction entityTransaction = null;
         long count=0;
@@ -268,7 +268,7 @@ public class HospitalRepoImpl implements HospitalRepo {
 
         try {
             entityManager = entityManagerFactory.createEntityManager();
-            Query query = entityManager.createNamedQuery("checkTimeSlotExist");
+            Query query = entityManager.createNamedQuery("SlotEntity.checkTimeSlotExist");
             query.setParameter("specName", specializationName);
             query.setParameter("start", startTime);
             query.setParameter("end", endTime);
@@ -773,6 +773,81 @@ return null;
             entityManager.close();
         }
         return null;
+    }
+
+    @Override
+    public PatientEntity findByRegistrationId(String registrationId) {
+        EntityManager entityManager = null;
+        try {
+            entityManager = entityManagerFactory.createEntityManager();
+
+            TypedQuery<PatientEntity> query = entityManager.createNamedQuery(
+                    "PatientEntity.findByRegistrationId", PatientEntity.class
+            );
+            query.setParameter("regId", registrationId);
+
+            // get single result safely
+            return query.getResultStream().findFirst().orElse(null);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            if (entityManager != null && entityManager.isOpen()) {
+                entityManager.close();
+
+            }
+        }
+    }
+    @Override
+    public Long countPatientPhoneNumber(String phone) {
+        EntityManager entityManager=null;
+        EntityTransaction entityTransaction = null;
+        long count=0;
+        try {
+            entityManager = entityManagerFactory.createEntityManager();
+            entityTransaction = entityManager.getTransaction();
+
+            entityTransaction.begin();
+            Query query = entityManager.createNamedQuery("PatientEntity.countPhoneNumber");
+            query.setParameter("phone", phone);
+            count = (long) query.getSingleResult();
+            entityTransaction.commit();
+        }catch (Exception e){
+            if(entityTransaction!=null && entityTransaction.isActive()){
+                entityTransaction.rollback();
+            }
+            e.printStackTrace();
+        }finally {
+            entityManager.close();
+        }
+
+        return count;
+    }
+    @Override
+    public Long countPatientEmail(String email) {
+        EntityManager entityManager = null;
+        EntityTransaction entityTransaction = null;
+        long count = 0;
+        try {
+            entityManager = entityManagerFactory.createEntityManager();
+            entityTransaction = entityManager.getTransaction();
+
+            entityTransaction.begin();
+            Query query = entityManager.createNamedQuery("PatientEntity.countByEmail");
+            query.setParameter("email", email);
+            count = (long) query.getSingleResult();
+            entityTransaction.commit();
+        } catch (Exception e) {
+            if (entityTransaction != null && entityTransaction.isActive()) {
+                entityTransaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            entityManager.close();
+        }
+
+        return count;
     }
 
 }

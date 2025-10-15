@@ -156,7 +156,7 @@ public class HospitalServiceImpl implements HospitalService {
 //    }
 //
     @Override
-    public int countPhoneNumber(long phone) {
+    public int countPhoneNumber(String phone) {
         return Math.toIntExact(hospitalRepo.countPhoneNumber(phone));
     }
 //
@@ -169,5 +169,13 @@ public class HospitalServiceImpl implements HospitalService {
         return Math.toIntExact(hospitalRepo.countDoctorEmail(email));
     }
 
+    @Override
+    public int countPatientEmail(String email) {
+        return Math.toIntExact(hospitalRepo.countPatientEmail(email));
+    }
 
+    @Override
+    public int countPatientPhoneNumber(String phone) {
+        return Math.toIntExact(hospitalRepo.countPatientPhoneNumber(phone));
+    }
 }

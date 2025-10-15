@@ -73,7 +73,7 @@ public class DoctorEntity extends AuditEntity  {
     private String email;
 
     @Column(name = "phone_number", nullable = false, unique = true)
-    private Long phone;
+    private String phone;
 
     @Column(name = "specialization", nullable = false)
     private String specializationName;

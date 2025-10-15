@@ -26,7 +26,7 @@ public class DoctorDTO {
     @NotNull(message = "PhoneNumber should not be null")
     @Min(value = 1000000000L, message = "Phone number should be 10 digits")
     @Max(value = 99999999999L, message = "Phone number should be 10 digits")
-    private long phone;
+    private String phone;
 
     @NotNull(message = "Specialization is required")
     private String specializationName;

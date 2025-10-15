@@ -27,7 +27,7 @@ public interface HospitalRepo {
 //
 //    Long countLastName(String lastName);
 //
-     Long countPhoneNumber(long phone);
+     Long countPhoneNumber(String phone);
 
      boolean isTimeSlotExist(String specializationName, LocalTime startTime,LocalTime endTime);
 //
@@ -61,6 +61,12 @@ List<String> getAllNames(String specialization);
     PatientEntity getPatientByEmail(String email);
 
     TimeSlotEntity getTImeSlotIdByTime(String time);
+
+    PatientEntity findByRegistrationId(String registrationId);
+
+    Long countPatientPhoneNumber(String phone);
+    Long countPatientEmail(String email);
+
 
 
 

@@ -73,15 +73,16 @@
                             </button>
                         </div>
                     </form>
-                    <div id="message"></div>
-
-                    <c:if test="${not empty error}">
-                        <div class="alert alert-danger mt-3 text-center shadow-sm">${error}</div>
-                    </c:if>
-                    <c:if test="${not empty success}">
-                        <div class="alert alert-success mt-3 text-center shadow-sm">${success}</div>
-                    </c:if>
-                </div>
+                    <div id="form-container">
+                        <div id="message">
+                            <c:if test="${not empty error}">
+                                <div class="alert alert-danger mt-3 text-center shadow-sm">${error}</div>
+                            </c:if>
+                            <c:if test="${not empty success}">
+                                <div class="alert alert-success mt-3 text-center shadow-sm">${success}</div>
+                            </c:if>
+                        </div>
+                    </div>
             </div>
 
 </section>
@@ -100,39 +101,48 @@
 </body>
 <script>
     function CheckTimeSlot() {
-        let specialization = document.getElementById("specialization").value;
-        let start = document.getElementById("startTime").value;
-        let end = document.getElementById("endTime").value;
-        let message = document.getElementById("message");
-        let saveBtn = document.getElementById("saveBtn");
+      let specialization = document.getElementById("specialization").value;
+      let start = document.getElementById("startTime").value;
+      let end = document.getElementById("endTime").value;
+      let message = document.getElementById("message");
+      let saveBtn = document.getElementById("saveBtn");
 
-        message.innerHTML = "";
-        if (!specialization || !start || !end) return;
+      // --- Start of added/modified logic for clearing ---
+      // Clear the message div and re-enable the button immediately
+      // so the user can try again after changing an input.
+      message.innerHTML = "";
+      saveBtn.disabled = false;
+      // --- End of added/modified logic for clearing ---
 
-        const xhttp = new XMLHttpRequest();
-        xhttp.onreadystatechange = function() {
-            if (this.readyState === 4 && this.status === 200) {
-                const response = this.responseText.trim();
-                if (response === "exists") {
-                    message.innerHTML = "<div class='alert alert-danger text-center mt-3 shadow-sm'> Time slot already exists!</div>";
-                    saveBtn.disabled = true;
-                } else {
-                    message.innerHTML = "";
-                    saveBtn.disabled = false;
-                }
-            }
-        };
+      if (!specialization || !start || !end) return;
 
-        xhttp.open("POST", "/Chirashree_Hospital_Module/api/slot/check", true);
-        xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      const xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+          if (this.readyState === 4 && this.status === 200) {
+              const response = this.responseText.trim();
+              if (response === "exists") {
+                  message.innerHTML = "<div class='alert alert-danger text-center mt-3 shadow-sm'> Time slot already exists!</div>";
+                  saveBtn.disabled = true;
+              } else {
+                  // The 'else' part remains as it was, but the initial clear
+                  // handles the case where the user changes input before the
+                  // request completes.
+                  message.innerHTML = "";
+                  saveBtn.disabled = false;
+              }
+          }
+      };
 
-        // JavaScript: encode values properly
-        const params =
-            "specializationName=" + encodeURIComponent(specialization) +
-            "&startTime=" + encodeURIComponent(start) +
-            "&endTime=" + encodeURIComponent(end);
+      xhttp.open("POST", "/Chirashree_Hospital_Module/api/slot/check", true);
+      xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
-        xhttp.send(params);
-    }
+      // JavaScript: encode values properly
+      const params =
+          "specializationName=" + encodeURIComponent(specialization) +
+          "&startTime=" + encodeURIComponent(start) +
+          "&endTime=" + encodeURIComponent(end);
+
+      xhttp.send(params);
+  }
 </script>
 </html>

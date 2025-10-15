@@ -86,7 +86,7 @@
             <!-- Phone -->
             <div class="col-md-6">
                 <label for="phone" class="form-label fw-semibold">Phone Number</label>
-                <input type="number" class="form-control shadow-sm" id="phone" name="phone"
+                <input type="text" class="form-control shadow-sm" id="phone" name="phone"
                        oninput="validatePhone()" onchange="CheckPhoneNumber()" value="${dto.phone}" placeholder="Enter phone number" required>
                 <div id="phoneError" class="form-text text-danger"></div>
             </div>

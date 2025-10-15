@@ -51,18 +51,18 @@
             </div>
         </c:if>
 
-        <form action="savePatient" method="post">
+        <form action="savePatient" method="post"  enctype="multipart/form-data">
 
             <!-- First & Last Name -->
             <div class="row mb-3">
                 <div class="col-md-6">
-                    <label for="firstName" class="form-label">First Name</label>
-                    <input type="text" id="firstName" name="firstName"  oninput="validateFirstName()" onchange="CheckFirstName()" class="form-control" required>
+                    <label for="firstName" class="form-label">First Name<span style="color:red">*</span></label>
+                    <input type="text" id="firstName" name="firstName"  oninput="validateFirstName()"  class="form-control" required>
                     <div id="firstnameError" class="form-text text-danger"></div>
                 </div>
                 <div class="col-md-6">
                     <label for="lastName" class="form-label">Last Name</label>
-                    <input type="text" id="lastName" name="lastName" onchange="CheckLastName()" oninput="validateLastName()" class="form-control" required>
+                    <input type="text" id="lastName" name="lastName" oninput="validateLastName()" class="form-control" required>
                     <div id="lastnameError" class="form-text text-danger"></div>
                 </div>
             </div>
@@ -70,14 +70,14 @@
             <!-- Phone & Email -->
             <div class="row mb-3">
                 <div class="col-md-6">
-                    <label for="phone" class="form-label">Phone Number</label>
-                    <input type="number" class="form-control shadow-sm" id="phone" name="phone"
-                           oninput="validatePhone()" onchange="CheckPhoneNumber()" value="${dto.phone}" placeholder="Enter phone number" required>
+                    <label for="phone" class="form-label">Phone Number<span style="color:red">*</span></label>
+                    <input type="text" class="form-control shadow-sm" id="phone" name="phone"
+                           oninput="validatePhone()" onchange="CheckPatientPhoneNumber()" value="${dto.phone}" placeholder="Enter phone number" required>
                     <div id="phoneError" class="form-text text-danger"></div>
                 </div>
                 <div class="col-md-6">
-                    <label for="email" class="form-label">Email</label>
-                    <input type="email" id="email" name="email"  oninput="validateEmail()" onchange="checkDoctorEmail()" class="form-control" required>
+                    <label for="email" class="form-label">Email<span style="color:red">*</span></label>
+                    <input type="email" id="email" name="email"  oninput="validateEmail()" onchange="checkPatientEmail()" class="form-control" required>
                     <div id="emailError" class="form-text text-danger"></div>
                 </div>
             </div>
@@ -96,12 +96,12 @@
 
                 <div class="col-md-6">
                     <label for="age" class="form-label">Age</label>
-                    <input type="number" class="form-control" id="age" name="age" required>
+                    <input type="number" class="form-control" id="age" name="age" oninput="validateAge()" required>
                     <div id="ageError" class="form-text text-danger"></div>
                 </div>
 
                 <div class="col-md-6">
-                    <label for="healthConcern" class="form-label">Symptoms / Health Concern</label>
+                    <label for="healthConcern" class="form-label">Symptoms / Health Concern<span style="color:red">*</span></label>
                     <textarea id="healthConcern" name="healthConcern" class="form-control" rows="1" required></textarea>
                 </div>
             </div>

@@ -27,6 +27,10 @@ import java.time.LocalTime;
                 "AND CONCAT(s.startTime, '--', s.endTime) NOT IN " +
                 "(SELECT ts.timeSlot FROM TimeSlotEntity ts WHERE ts.doctor.id = :docId)"
 )
+@NamedQuery(
+        name = "SlotEntity.checkTimeSlotExist",
+        query ="Select count(s) from SlotEntity s where s.specializationName=:specName and s.startTime=:start and s.endTime=:end"
+)
 public class SlotEntity extends AuditEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

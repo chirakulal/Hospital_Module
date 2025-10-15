@@ -2,16 +2,23 @@ package com.xworkz.module.service;
 
 import com.xworkz.module.dto.PatientDTO;
 import com.xworkz.module.dto.RegistrationIdGenerator;
-import com.xworkz.module.entity.DoctorEntity;
-import com.xworkz.module.entity.PatientEntity;
-import com.xworkz.module.entity.TimeSlotEntity;
+import com.xworkz.module.entity.*;
 import com.xworkz.module.repository.HospitalRepo;
 import com.xworkz.module.service.email.EmailService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Email;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Service
@@ -31,15 +38,73 @@ public class PatientServiceImpl implements PatientService {
     @Autowired
     private EmailService emailService;
 
-    @Override
-    public boolean savePatientData(PatientDTO patientDTO) {
-        log.info("Running savePatientData in service" + patientDTO);
-        DoctorEntity doctorEntity = doctorDetailsService.findByFullName(patientDTO.getDoctor());
-        TimeSlotEntity timeSlotEntity = doctorDetailsService.getTImeSlotIdByTime(patientDTO.getSlot());
-        log.info("Fetched doctor entity" + doctorEntity);
-        log.info("Fetched time slot entity" + timeSlotEntity);
+    private String uploadDir = "D:\\chiraimage\\HospitalProject\\ImageFolder";
+    private Path symptomPath = Paths.get("D:\\chiraimage\\HospitalProject\\ImageFolder\\symptoms");
 
+
+    @Override
+    public boolean savePatientData(MultipartFile profileImage, List<MultipartFile> symptomImage, PatientDTO patientDTO) throws IOException {
         PatientEntity patientEntity = new PatientEntity();
+        log.info("Running savePatientData for patientDTO: {}", patientDTO);
+
+        // --- Validate mandatory fields ---
+        if (patientDTO.getFirstName() == null || patientDTO.getEmail() == null ||
+                patientDTO.getAppointmentDate() == null || patientDTO.getBloodType() == null) {
+            throw new RuntimeException("Missing mandatory patient fields");
+        }
+
+        // --- Validate foreign keys ---
+        DoctorEntity doctorEntity = doctorDetailsService.findByFullName(patientDTO.getDoctor());
+        if (doctorEntity == null) {
+            throw new RuntimeException("Doctor not found: " + patientDTO.getDoctor());
+        }
+
+        TimeSlotEntity timeSlotEntity = doctorDetailsService.getTImeSlotIdByTime(patientDTO.getSlot());
+        if (timeSlotEntity == null) {
+            throw new RuntimeException("Time slot not found: " + patientDTO.getSlot());
+        }
+
+        // --- Handle profile image ---
+        String profileExt = FilenameUtils.getExtension(profileImage.getOriginalFilename());
+        String profileFileName = patientDTO.getFirstName() + "_" + System.currentTimeMillis() + "." + profileExt;
+        Path uploadPath = Paths.get(uploadDir);
+        if (!Files.exists(uploadPath)) Files.createDirectories(uploadPath);
+        Path profilePath = uploadPath.resolve(profileFileName);
+        Files.copy(profileImage.getInputStream(), profilePath);
+
+        PatientProfileEntity profileEntity = new PatientProfileEntity();
+        profileEntity.setOriginalImageName(profileImage.getOriginalFilename());
+        profileEntity.setSavedName(profileFileName);
+        profileEntity.setDateTime(new Timestamp(System.currentTimeMillis()));
+        profileEntity.setFilePath(profilePath.toString());
+        profileEntity.setFileSize(profileImage.getSize());
+        profileEntity.setFileType(profileImage.getContentType());
+        profileEntity.setPatientEntity(patientEntity);
+
+
+        // --- Handle symptom images ---
+        List<PatientSymptomsEntity> symptomEntities = new ArrayList<>();
+        if (!Files.exists(symptomPath)) Files.createDirectories(symptomPath);
+
+        if (symptomImage != null && !symptomImage.isEmpty()) {
+            for (MultipartFile file : symptomImage) {
+                String ext = FilenameUtils.getExtension(file.getOriginalFilename());
+                String symptomFileName = patientDTO.getFirstName() + "_symptom_" + System.currentTimeMillis() + "_" + Math.random() + "." + ext;
+                Path symptomFileLocation = symptomPath.resolve(symptomFileName);
+                Files.copy(file.getInputStream(), symptomFileLocation);
+
+                PatientSymptomsEntity symptomEntity = new PatientSymptomsEntity();
+                symptomEntity.setImageOriginalName(file.getOriginalFilename());
+                symptomEntity.setImageName(symptomFileName);
+                symptomEntity.setImagePath(symptomFileLocation.toString());
+                symptomEntity.setSize(file.getSize());
+                symptomEntity.setPatientEntity(patientEntity);
+
+                symptomEntities.add(symptomEntity);
+            }
+        }
+        // --- Map DTO to entity ---
+
         patientEntity.setFirstName(patientDTO.getFirstName());
         patientEntity.setLastName(patientDTO.getLastName());
         patientEntity.setAge(patientDTO.getAge());
@@ -51,52 +116,38 @@ public class PatientServiceImpl implements PatientService {
         patientEntity.setSpecializationName(patientDTO.getSpecializationName());
         patientEntity.setDoctor(doctorEntity);
         patientEntity.setSlot(timeSlotEntity);
-        log.info("Converted entity data" + patientEntity);
+        patientEntity.setPatientProfileEntity(profileEntity);
+        patientEntity.setPatientSymtomsImageEntityList(symptomEntities);
 
-        patientEntity.setRegistrationId(
-                generateUniqueRegistrationId(patientEntity.getFirstName())
-        );
+        // --- Generate unique registration ID ---
+        patientEntity.setRegistrationId(generateUniqueRegistrationId(patientEntity.getFirstName()));
 
+
+
+        // --- Save patient ---
         boolean result = hospitalRepo.savePatientData(patientEntity);
-
         if (result) {
-            log.info("Patient data saved successfully");
-           emailService.sendPatientAppointmentEmail(patientEntity);
-           
+            log.info("Patient data saved successfully for {}", patientEntity.getRegistrationId());
+            emailService.sendPatientAppointmentEmail(patientEntity);
             return true;
         }
-
 
         return false;
     }
 
+    // --- Correct unique registration ID check ---
     private String generateUniqueRegistrationId(String firstName) {
         final int MAX_ATTEMPTS = 5;
-        String regId = null;
-
         for (int i = 0; i < MAX_ATTEMPTS; i++) {
-            // Generate a potential ID
-            regId = RegistrationIdGenerator.generateRegistrationId(firstName);
-
-            // Check if it already exists in the database
-            // NOTE: Requires a findByRegistrationId method on HospitalRepo
-            PatientEntity existingPatient = hospitalRepo.getPatientByEmail(regId);
-
-            if (existingPatient == null) {
-                // ID is unique
-                log.info("Successfully generated unique Reg ID: {}", regId);
+            String regId = RegistrationIdGenerator.generateRegistrationId(firstName);
+            if (hospitalRepo.findByRegistrationId(regId) == null) {
+                log.info("Generated unique registration ID: {}", regId);
                 return regId;
             }
-
-            // If ID exists, log and loop to generate a new one
-            log.warn("Registration ID collision detected: {}. Retrying...", regId);
+            log.warn("Registration ID collision: {}. Retrying...", regId);
         }
-
-        // If all attempts fail, throw an exception
-        log.error("Failed to generate a unique registration ID after {} attempts.", MAX_ATTEMPTS);
-        throw new RuntimeException("Could not generate a unique patient registration ID.");
+        throw new RuntimeException("Could not generate unique patient registration ID after " + MAX_ATTEMPTS + " attempts.");
     }
-
 }
 // NOTE: The 'registerNewPatient' method below was incomplete and seems redundant
 // with savePatientData, so it should generally be removed unless it serves a
@@ -107,4 +158,5 @@ public class PatientServiceImpl implements PatientService {
     }
     */
 //
+
 

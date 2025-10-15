@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -50,10 +52,12 @@ public class PatientRegistrationController {
     }
 
     @PostMapping("savePatient")
-    public ModelAndView onSavePatient(ModelAndView modelAndView, PatientDTO patientDTO){
+    public ModelAndView onSavePatient(@RequestParam("profile") MultipartFile profileImage,
+                                      @RequestParam("symptomsImage") List<MultipartFile> patientSymtomsImage,
+                                      ModelAndView modelAndView, PatientDTO patientDTO) throws IOException {
         log.info("PatientDTO data"+patientDTO);
 
-        boolean saved = patientService.savePatientData(patientDTO);
+        boolean saved = patientService.savePatientData(profileImage,patientSymtomsImage,patientDTO);
         if(saved){
             modelAndView.addObject("success","Patient Registered Successfully");
         }else {

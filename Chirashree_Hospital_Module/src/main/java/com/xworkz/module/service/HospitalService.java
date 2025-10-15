@@ -18,7 +18,7 @@ public interface HospitalService {
 
 //    int countLastName(String lastName);
 //
-   int countPhoneNumber(long phone);
+   int countPhoneNumber(String phone);
 //
 //
 //
@@ -26,4 +26,8 @@ public interface HospitalService {
     int countDoctorEmail(String email);
 
     void clearUnusedOtps();
+
+    int countPatientEmail(String email);
+
+    int countPatientPhoneNumber(String phone);
 }

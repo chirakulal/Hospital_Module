@@ -63,6 +63,7 @@ public class AddSlotController {
     @PostMapping("saveSlot")
     public ModelAndView saveSlot(@RequestParam String doctorName,
                                  @RequestParam String timeSlot,
+                                 @RequestParam String specializationName,
                                  ModelAndView modelAndView) {
 
         boolean updated = addSlotService.assignSlotToDoctor(doctorName, timeSlot);
@@ -75,11 +76,7 @@ public class AddSlotController {
 
         // reload page with updated specializations
 
-        modelAndView.addObject("specializations", specializationService.getAllNames());
-        modelAndView.addObject("doctorNames", addSlotService.getAllNames(doctorName));
-        modelAndView.addObject("timeList", addSlotService.getTime(timeSlot));
 
-        modelAndView.setViewName("AddSlot");
-        return modelAndView;
+         return new ModelAndView("redirect:/schedule?specializationName=" + specializationName);
     }
 }
