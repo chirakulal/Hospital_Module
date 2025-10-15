@@ -84,7 +84,7 @@
                         </div>
                     </div>
             </div>
-
+    </div>
 </section>
 
 <footer class="bg-success text-white text-center py-3 mt-auto shadow-sm">
